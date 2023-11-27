@@ -3,9 +3,11 @@ import 'package:property_valuation/View/Screens/about_us_screen.dart';
 import 'package:property_valuation/View/Screens/attendance_screen.dart';
 import 'package:property_valuation/View/Screens/contact_us_screen.dart';
 import 'package:property_valuation/View/Screens/history_screen.dart';
+import 'package:property_valuation/View/Screens/login_screen.dart';
 import 'package:property_valuation/View/Screens/policy_screen.dart';
 import 'package:property_valuation/View/Screens/profile_screen.dart';
 import 'package:property_valuation/View/Screens/reimbustment_screen.dart';
+import 'package:property_valuation/View/Screens/tech_initiation_screen.dart';
 import 'package:property_valuation/View/Screens/upadate_password_screen.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 
@@ -104,6 +106,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -130,6 +133,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -157,6 +161,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -237,6 +242,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -268,6 +274,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -295,6 +302,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -311,13 +319,15 @@ class HomeScreen extends StatelessWidget {
                       textsize: 12,
                       textweight: FontWeight.w500),
                   onTap: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => AboutUsScreen()));
-                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AboutUsScreen()));
                   },
                 ),
               ),
               ListTile(
+                splashColor: Color(0xFF38C0CE),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.white,
@@ -343,35 +353,11 @@ class HomeScreen extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                     border: Border(
-                        bottom: BorderSide(color: Colors.white),
-                        top: BorderSide(color: Colors.white))),
-                child: ListTile(
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.policy,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'Policy',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => PolicyScreen()));
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
+                  top: BorderSide(color: Colors.white),
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -399,6 +385,7 @@ class HomeScreen extends StatelessWidget {
                   bottom: BorderSide(color: Colors.white),
                 )),
                 child: ListTile(
+                  splashColor: Color(0xFF38C0CE),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
@@ -439,7 +426,9 @@ class HomeScreen extends StatelessWidget {
                                   backgroundColor: MaterialStateProperty.all(
                                     Color(0xFF38C0CE),
                                   )),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               child: TextWidget(
                                   text: 'No',
                                   textcolor: Colors.white,
@@ -457,7 +446,12 @@ class HomeScreen extends StatelessWidget {
                                   backgroundColor: MaterialStateProperty.all(
                                     Color(0xFF38C0CE),
                                   )),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()));
+                              },
                               child: TextWidget(
                                   text: 'Yes',
                                   textcolor: Colors.white,
@@ -492,19 +486,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/monthly.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -520,19 +513,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/caase.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -548,19 +540,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/visit.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -576,7 +567,7 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 25,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -584,19 +575,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/monthly.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -612,19 +602,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/caase.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -640,19 +629,18 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            height: 105,
-                            width: 105,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(55),
                                 border:
                                     Border.all(width: 2, color: Colors.white)),
                             child: Center(
-                              child: Image.asset(
-                                'images/visit.png',
-                                color: Colors.white,
-                                height: 50,
-                                width: 50,
-                              ),
+                              child: TextWidget(
+                                  text: '0',
+                                  textcolor: Colors.white,
+                                  textsize: 20,
+                                  textweight: FontWeight.w700),
                             ),
                           ),
                           SizedBox(
@@ -667,6 +655,221 @@ class HomeScreen extends StatelessWidget {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 300,
+                    width: MediaQuery.sizeOf(context).width,
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.white)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.flag,
+                                      color: Colors.white,
+                                    ),
+                                    TextWidget(
+                                        text: 'LP-8',
+                                        textcolor: Colors.white,
+                                        textsize: 14,
+                                        textweight: FontWeight.w500)
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.copy,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TechInitiationScreen()));
+                                      },
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextWidget(
+                                        text: 'Location Name:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Borrower Name:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Institute Name:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Contact Person:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Address:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Date of visit:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Date of Reschedule:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300),
+                                    TextWidget(
+                                        text: 'Special Instruction:',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w300)
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextWidget(
+                                        text: 'Pune',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'ABC',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'TechGigs',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'Contact Person',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'karve nagar',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'DD-MM-YYYY',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'DD-MM-YYYY',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700),
+                                    TextWidget(
+                                        text: 'NA',
+                                        textcolor: Colors.white,
+                                        textsize: 15,
+                                        textweight: FontWeight.w700)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                height: 30,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.white)),
+                                child: TextWidget(
+                                    text: 'Case Status Update',
+                                    textcolor: Colors.white,
+                                    textsize: 12,
+                                    textweight: FontWeight.w500),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.white)),
+                                child: TextWidget(
+                                    text: 'Schedule',
+                                    textcolor: Colors.white,
+                                    textsize: 12,
+                                    textweight: FontWeight.w500),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.white)),
+                                child: TextWidget(
+                                    text: 'Call',
+                                    textcolor: Colors.white,
+                                    textsize: 12,
+                                    textweight: FontWeight.w500),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             )

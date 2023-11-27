@@ -1,11 +1,93 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:property_valuation/View/Screens/create_account_screen.dart';
 import 'package:property_valuation/View/Screens/forget_password_screen.dart';
 import 'package:property_valuation/View/Screens/home_screen.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatelessWidget {
+import '../../constant/shared_functions.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final SharedPreferencesHelper _sharedPreferencesHelper =
+      SharedPreferencesHelper();
+
+  TextEditingController _userNameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  Future<void> checkAuthentication() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('authToken');
+
+    if (token != null) {
+      // The user is already authenticated, navigate to the home screen
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    }
+  }
+
+  Future<void> login(String email, String password) async {
+    try {
+      Response response = await post(
+        Uri.parse('https://apivaluation.techgigs.in/admin/user/islogin'),
+        body: {"email": email, "password": password},
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        var token = data['data']['token'];
+
+        print('API response: ${response.body}');
+        print('Token : $token');
+        print('Login successfully');
+
+        await _sharedPreferencesHelper.saveToken(token);
+        await saveToken(token);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Login failed. Please check your credentials.')),
+        );
+        print('Failed');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+      print(e.toString());
+    }
+  }
+
+  Future<void> saveToken(String token) async {
+    try {
+      Response response2 = await post(
+          Uri.parse("https://apivaluation.techgigs.in/admin/user/getuserlogin"),
+          body: {"token": token});
+      if (response2.statusCode == 200) {
+        var responseData = jsonDecode(response2.body);
+        print('Second API response: ${response2.body}');
+        // Process the response from the second API if needed
+      } else {
+        print(
+            'Failed to send token to the second API. Status code: ${response2.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending token to the second API: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +156,7 @@ class LoginScreen extends StatelessWidget {
                               // height: 60,
                               // width: MediaQuery.sizeOf(context).width,
                               child: TextField(
+                                controller: _userNameController,
                                 decoration: InputDecoration(
                                     hintText: 'Username',
                                     hintStyle: TextStyle(color: Colors.white),
@@ -108,6 +191,7 @@ class LoginScreen extends StatelessWidget {
                               color:
                                   Color.fromARGB(1, 66, 75, 95).withOpacity(1),
                               child: TextField(
+                                controller: _passwordController,
                                 decoration: InputDecoration(
                                     hintText: 'Password',
                                     hintStyle: TextStyle(color: Colors.white),
@@ -134,8 +218,21 @@ class LoginScreen extends StatelessWidget {
                             backgroundColor:
                                 MaterialStateProperty.all(Color(0xFF38C0CE))),
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => HomeScreen()));
+                          final email = _userNameController.text.toString();
+                          final password = _passwordController.text.toString();
+                          print('Email: $email, Password: $password');
+
+                          if (email.isNotEmpty && password.isNotEmpty) {
+                            setState(() {
+                              login(email, password);
+                            });
+                          } else {
+                            // Show an error message if fields are empty
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Please fill in both fields.')),
+                            );
+                          }
                         },
                         child: TextWidget(
                             text: 'Sign In',
