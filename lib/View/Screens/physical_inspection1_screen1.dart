@@ -19,8 +19,7 @@ class PhyscialInspection1Screen1 extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios_new,
@@ -37,7 +36,8 @@ class PhyscialInspection1Screen1 extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
               },
               icon: Icon(
                 Icons.home,

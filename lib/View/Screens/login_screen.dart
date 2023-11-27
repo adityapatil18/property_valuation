@@ -36,6 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login(String email, String password) async {
+    email = email.trim();
+    password = password.trim();
     try {
       Response response = await post(
         Uri.parse('https://apivaluation.techgigs.in/admin/user/islogin'),
