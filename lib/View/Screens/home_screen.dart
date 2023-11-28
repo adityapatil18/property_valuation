@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:property_valuation/View/Screens/about_us_screen.dart';
 import 'package:property_valuation/View/Screens/attendance_screen.dart';
 import 'package:property_valuation/View/Screens/contact_us_screen.dart';
@@ -11,14 +14,43 @@ import 'package:property_valuation/View/Screens/tech_initiation_screen.dart';
 import 'package:property_valuation/View/Screens/upadate_password_screen.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../constant/shared_functions.dart';
+import '../../model/enginer_visit_case_model.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // String hexColor = "333a49";
-    // Color color = Color(int.parse("0xFF$hexColor"));
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  final SharedPreferencesHelper _sharedPreferencesHelper =
+      SharedPreferencesHelper();
+  Future<void> enginerVisitCaseList(String userId) async {
+    try {
+      await _sharedPreferencesHelper.getUserId(userId);
+
+      Response response = await post(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        final enginerVisitCaseData =
+            EnginerVisitCaseData.fromJson(responseData);
+        final abc = enginerVisitCaseData.data.dataarray[0].borrowerName;
+      } else {
+        print(
+            'Failed to send userId to the third API. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending userId to the third API: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF38C0CE),
@@ -714,111 +746,46 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextWidget(
-                                        text: 'Location Name:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Borrower Name:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Institute Name:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Contact Person:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Address:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Date of visit:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Date of Reschedule:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300),
-                                    TextWidget(
-                                        text: 'Special Instruction:',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w300)
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextWidget(
-                                        text: 'Pune',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'ABC',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'TechGigs',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'Contact Person',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'karve nagar',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'DD-MM-YYYY',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'DD-MM-YYYY',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700),
-                                    TextWidget(
-                                        text: 'NA',
-                                        textcolor: Colors.white,
-                                        textsize: 15,
-                                        textweight: FontWeight.w700)
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                          TextWidget(
+                              text: 'Location Name:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Borrower Name:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Institute Name:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Contact Person:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Address:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Date of visit:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Date of Reschedule:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
+                          TextWidget(
+                              text: 'Special Instruction:',
+                              textcolor: Colors.white,
+                              textsize: 15,
+                              textweight: FontWeight.w300),
                           SizedBox(
                             height: 10,
                           ),

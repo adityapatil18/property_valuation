@@ -9,6 +9,7 @@ import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constant/shared_functions.dart';
+import '../../model/enginer_visit_case_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -53,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
         await _sharedPreferencesHelper.saveToken(token);
         await saveToken(token);
-
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
@@ -82,12 +82,50 @@ class _LoginScreenState extends State<LoginScreen> {
         var responseData = jsonDecode(response2.body);
         print('Second API response: ${response2.body}');
         // Process the response from the second API if needed
+        // Extracting user ID from the response
+        var userId = responseData['data']['id'];
+        print('User ID: $userId');
+
+        // Saving the user ID to SharedPreferences
+        await _sharedPreferencesHelper.saveUserId(userId);
+        await enginerVisitCaseList(userId);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        return userId;
       } else {
         print(
             'Failed to send token to the second API. Status code: ${response2.statusCode}');
       }
     } catch (e) {
       print('Error sending token to the second API: $e');
+    }
+  }
+
+  Future<void> enginerVisitCaseList(String userId) async {
+    try {
+      await _sharedPreferencesHelper.getUserId(userId);
+
+      Response response = await post(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print('Third API response: ${response.body}');
+        var data = responseData['data'];
+        print('User ID check : $data');
+        final enginerVisitCaseData =
+            EnginerVisitCaseData.fromJson(responseData);
+        var abc = enginerVisitCaseData.data.dataarray[0].borrowerName;
+        print('abc:$abc');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      } else {
+        print(
+            'Failed to send userId to the third API. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending userId to the third API: $e');
     }
   }
 
