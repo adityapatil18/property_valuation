@@ -12,7 +12,9 @@ import '../../constant/shared_functions.dart';
 import '../../model/enginer_visit_case_model.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -21,20 +23,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
-
+  String locationName = "";
+  String borrowerName = "";
+  String instituteName = "";
+  String contactPerson = "";
+  String address = "";
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
-  Future<void> checkAuthentication() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('authToken');
-
-    if (token != null) {
-      // The user is already authenticated, navigate to the home screen
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    }
-  }
 
   Future<void> login(String email, String password) async {
     email = email.trim();
@@ -116,8 +111,18 @@ class _LoginScreenState extends State<LoginScreen> {
         print('User ID check : $data');
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
-        var abc = enginerVisitCaseData.data.dataarray[0].borrowerName;
+        locationName =
+            enginerVisitCaseData.data.dataarray[0].locationData[0].name;
+        borrowerName = enginerVisitCaseData.data.dataarray[0].borrowerName;
+        address = enginerVisitCaseData.data.dataarray[0].addressofProperty;
+        DateTime abc =
+            enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
+        DateTime xyz = enginerVisitCaseData.data.dataarray[0].requestDate;
+        print('loaction name:$locationName');
+        print('borrower name:$borrowerName');
+        print('address:$address');
         print('abc:$abc');
+        print('xyz:$xyz');
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
@@ -294,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textcolor: Colors.white,
                           textsize: 16,
                           textweight: FontWeight.w300),
-                    )
+                    ),
                   ]),
             ),
           ),

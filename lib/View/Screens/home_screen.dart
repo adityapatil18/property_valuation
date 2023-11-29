@@ -27,6 +27,61 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
+  String locationName = "";
+  String borrowerName = "";
+  String instituteName = "";
+  String contactPerson = "";
+  String address = "";
+  DateTime? dateOfVisit;
+  DateTime? dateOfReschedule;
+  String specialInstruction = "";
+
+  Future<void> fetchData() async {
+    try {
+      // Retrieve the token from shared preferences
+      String? token = await _sharedPreferencesHelper.getToken();
+
+      if (token != null) {
+        // Token is available, proceed with fetching additional data
+        String? userId = await saveToken(token);
+        await enginerVisitCaseList(userId!);
+      } else {
+        print('Token not available.');
+        // Handle the case where the token is not available
+      }
+    } catch (e) {
+      print('Error in fetchData: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<String?> saveToken(String token) async {
+    try {
+      Response response2 = await post(
+          Uri.parse("https://apivaluation.techgigs.in/admin/user/getuserlogin"),
+          body: {"token": token});
+      if (response2.statusCode == 200) {
+        var responseData = jsonDecode(response2.body);
+        print('Second API response: ${response2.body}');
+        // Process the response from the second API if needed
+        // Extracting user ID from the response
+        var userId = responseData['data']['id'];
+        print('User ID: $userId');
+
+        // Saving the user ID to SharedPreferences
+        await _sharedPreferencesHelper.saveUserId(userId);
+        await enginerVisitCaseList(userId);
+
+        return userId;
+      } else {
+        print(
+            'Failed to send token to the second API. Status code: ${response2.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending token to the second API: $e');
+    }
+  }
+
   Future<void> enginerVisitCaseList(String userId) async {
     try {
       await _sharedPreferencesHelper.getUserId(userId);
@@ -39,14 +94,35 @@ class _HomeScreenState extends State<HomeScreen> {
         var responseData = jsonDecode(response.body);
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
-        final abc = enginerVisitCaseData.data.dataarray[0].borrowerName;
+        setState(() {
+          locationName =
+              enginerVisitCaseData.data.dataarray[0].locationData[0].name;
+          borrowerName = enginerVisitCaseData.data.dataarray[0].borrowerName;
+          address = enginerVisitCaseData.data.dataarray[0].addressofProperty;
+          instituteName = enginerVisitCaseData
+              .data.dataarray[0].manageInstitute[0].maininstitutiondata[0].name;
+          dateOfVisit =
+              enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
+          dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
+          print('Data updated successfully');
+        });
       } else {
         print(
             'Failed to send userId to the third API. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error sending userId to the third API: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('An error occurred while fetching data.'),
+      ));
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
   }
 
   @override
@@ -747,45 +823,45 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           TextWidget(
-                              text: 'Location Name:',
+                              text: 'Location Name:$locationName',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
-                              text: 'Borrower Name:',
+                              text: 'Borrower Name:$borrowerName',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
-                              text: 'Institute Name:',
+                              text: 'Institute Name:$instituteName',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
                               text: 'Contact Person:',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
-                              text: 'Address:',
+                              text: 'Address:$address',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
-                              text: 'Date of visit:',
+                              text: 'Date of visit:$dateOfVisit',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
-                              text: 'Date of Reschedule:',
+                              text: 'Date of Reschedule:$dateOfReschedule',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           TextWidget(
                               text: 'Special Instruction:',
                               textcolor: Colors.white,
                               textsize: 15,
-                              textweight: FontWeight.w300),
+                              textweight: FontWeight.w500),
                           SizedBox(
                             height: 10,
                           ),
