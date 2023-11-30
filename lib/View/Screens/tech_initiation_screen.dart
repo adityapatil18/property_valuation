@@ -368,7 +368,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
             color: Color(0xFF38C0CE),
             child: TextWidget(
                 text: 'Submit to Propval',
-                textcolor: Colors.black,
+                textcolor: Colors.white,
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
