@@ -5,16 +5,48 @@ import 'package:property_valuation/View/Screens/mm_sheets_screen.dart';
 import 'package:property_valuation/View/Screens/physical_inspection1_screen1.dart';
 import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dart';
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
+import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
+import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
 
 import '../custom_widgets/text_widgets.dart';
 
-class TechInitiationScreen extends StatelessWidget {
+class TechInitiationScreen extends StatefulWidget {
   const TechInitiationScreen({super.key});
 
   @override
+  State<TechInitiationScreen> createState() => _TechInitiationScreenState();
+}
+
+class _TechInitiationScreenState extends State<TechInitiationScreen> {
+  TextEditingController _instituteType = TextEditingController();
+  TextEditingController _instituteName = TextEditingController();
+  TextEditingController __insituteBranch = TextEditingController();
+  TextEditingController _dateofrequest = TextEditingController();
+  TextEditingController _dateofvisit = TextEditingController();
+  TextEditingController _nameOfApplicant = TextEditingController();
+  TextEditingController _nameofPerson = TextEditingController();
+  TextEditingController _mobileNumber = TextEditingController();
+  TextEditingController _filerefNo = TextEditingController();
+  TextEditingController _cas = TextEditingController();
+  TextEditingController _addressRequest = TextEditingController();
+  TextEditingController _addressInspection = TextEditingController();
+  TextEditingController _loanType = TextEditingController();
+  TextEditingController _cts = TextEditingController();
+  TextEditingController _wardName = TextEditingController();
+  TextEditingController _flatNo = TextEditingController();
+  TextEditingController _floor = TextEditingController();
+  TextEditingController _socity = TextEditingController();
+  TextEditingController _plotNo = TextEditingController();
+  TextEditingController _sectorColony = TextEditingController();
+  TextEditingController _road = TextEditingController();
+  TextEditingController _location = TextEditingController();
+  TextEditingController _city = TextEditingController();
+  TextEditingController _district = TextEditingController();
+  TextEditingController _landmark = TextEditingController();
+  TextEditingController _pincode = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -22,14 +54,14 @@ class TechInitiationScreen extends StatelessWidget {
             },
             icon: Icon(
               Icons.arrow_back_ios_new,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
           backgroundColor: Color(0xFF38C0CE),
           centerTitle: true,
           title: TextWidget(
               text: 'Tech Initiation',
-              textcolor: Colors.white,
+              textcolor: Colors.black,
               textsize: 20,
               textweight: FontWeight.w500),
           actions: [
@@ -39,7 +71,7 @@ class TechInitiationScreen extends StatelessWidget {
                 },
                 icon: Icon(
                   Icons.home,
-                  color: Colors.white,
+                  color: Colors.black,
                 )),
             CustomPopupMenuButton(onSelected: (value) {
               switch (value) {
@@ -92,113 +124,40 @@ class TechInitiationScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextWidget(
-                    text: 'Institute Type',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Insitute Type'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _instituteType),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Institute Name',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Insitute Name'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _instituteName),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Institute Branch',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Insitute Branch'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: __insituteBranch),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Date of request',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Date of Request'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _dateofrequest),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Date of visit',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomRichText(mainText: 'Date of Visit'),
+                CustomTextField(controller: _dateofvisit),
                 SizedBox(
                   height: 10,
                 ),
@@ -208,185 +167,75 @@ class TechInitiationScreen extends StatelessWidget {
                 ),
                 TextWidget(
                     text: 'GENERAL DETAILS',
-                    textcolor: Colors.white,
+                    textcolor: Colors.black,
                     textsize: 18,
                     textweight: FontWeight.w500),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Name of the Applicant',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Name of the Applicant'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _nameOfApplicant),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Name of contact person',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Name of contact person'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _nameofPerson),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Mobile Number',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Mobile Number'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _mobileNumber),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'File Ref Number',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'File Ref Number'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _filerefNo),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'CAS No',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'CAS No'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _cas),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Address of the property(As per request)',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(
+                    mainText: 'Address of the Property(As per request)'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _addressRequest),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Address of the property(As per Inspection)',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(
+                    mainText: 'Adddressof the property(As per Inspection)'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _addressInspection),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Loan type/Product',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Loan type/Product'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _loanType),
                 SizedBox(
                   height: 10,
                 ),
@@ -397,311 +246,113 @@ class TechInitiationScreen extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'CTS/Survey No & Village',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'CTS/Survey No & Village'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _cts),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Ward Name/No.',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Ward Name/No.'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _wardName),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Flat No./Unit No.',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Flat No./Unit No.'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _flatNo),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Floor, Wing',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Floor,Wing'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _floor),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Society/Building Name',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Socity/Building name'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _socity),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Plot No.',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Plot No.'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _plotNo),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Sector/Colony/Locality',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Sector/Colony/Locality'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _sectorColony),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Road/Other',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Road/other'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _road),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Loan type/Product',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(
+                  mainText: 'Location',
+                  isRequired: true,
+                ),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _location),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Location',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'City'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _city),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'City',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'District'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _district),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'District',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(
+                  mainText: 'Landmark',
+                  isRequired: true,
+                ),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _landmark),
                 SizedBox(
                   height: 10,
                 ),
-                TextWidget(
-                    text: 'Landmark',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
+                CustomRichText(mainText: 'Pincode'),
                 SizedBox(
                   height: 5,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextWidget(
-                    text: 'Pincode',
-                    textcolor: Colors.white,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      ))),
-                ),
+                CustomTextField(controller: _pincode),
                 SizedBox(
                   height: 10,
                 ),
@@ -717,7 +368,7 @@ class TechInitiationScreen extends StatelessWidget {
             color: Color(0xFF38C0CE),
             child: TextWidget(
                 text: 'Submit to Propval',
-                textcolor: Colors.white,
+                textcolor: Colors.black,
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
