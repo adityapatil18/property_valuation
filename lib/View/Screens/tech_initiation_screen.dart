@@ -54,14 +54,14 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
             },
             icon: Icon(
               Icons.arrow_back_ios_new,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           backgroundColor: Color(0xFF38C0CE),
           centerTitle: true,
           title: TextWidget(
               text: 'Tech Initiation',
-              textcolor: Colors.black,
+              textcolor: Colors.white,
               textsize: 20,
               textweight: FontWeight.w500),
           actions: [
@@ -71,7 +71,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 },
                 icon: Icon(
                   Icons.home,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
             CustomPopupMenuButton(onSelected: (value) {
               switch (value) {
