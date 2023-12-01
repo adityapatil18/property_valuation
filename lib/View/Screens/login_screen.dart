@@ -23,11 +23,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
-  String locationName = "";
-  String borrowerName = "";
-  String instituteName = "";
-  String contactPerson = "";
-  String address = "";
+
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -48,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         print('Login successfully');
 
         await _sharedPreferencesHelper.saveToken(token);
-        await saveToken(token);
+        await saveTokenApi(token);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
@@ -68,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> saveToken(String token) async {
+  Future<void> saveTokenApi(String token) async {
     try {
       Response response2 = await post(
           Uri.parse("https://apivaluation.techgigs.in/admin/user/getuserlogin"),
@@ -98,8 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> enginerVisitCaseList(String userId) async {
     try {
-      await _sharedPreferencesHelper.getUserId(userId);
-
       Response response = await post(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
@@ -111,18 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
         print('User ID check : $data');
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
-        locationName =
-            enginerVisitCaseData.data.dataarray[0].locationData[0].name;
-        borrowerName = enginerVisitCaseData.data.dataarray[0].borrowerName;
-        address = enginerVisitCaseData.data.dataarray[0].addressofProperty;
-        DateTime abc =
-            enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
-        DateTime xyz = enginerVisitCaseData.data.dataarray[0].requestDate;
-        print('loaction name:$locationName');
-        print('borrower name:$borrowerName');
-        print('address:$address');
-        print('abc:$abc');
-        print('xyz:$xyz');
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {

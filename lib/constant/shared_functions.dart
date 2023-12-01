@@ -10,7 +10,7 @@ class SharedPreferencesHelper {
 
   // Keys for shared preferences
   static const String authTokenKey = 'authToken';
-  // static const String userId = "userId";
+  static const String userIds = "UserId";
 
   // Function to save the token to local storage
   Future<void> saveToken(String token) async {
@@ -26,11 +26,11 @@ class SharedPreferencesHelper {
 
   Future<void> saveUserId(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userId', userId);
+    prefs.setString(userIds, userId);
   }
 
-  Future<String?> getUserId(userId) async {
+  Future<String?> getUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.getString("userId");
+    return prefs.getString(userIds);
   }
 }

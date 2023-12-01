@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:property_valuation/View/Screens/case_status_screen.dart';
 import 'package:property_valuation/View/Screens/images_screen.dart';
 import 'package:property_valuation/View/Screens/mm_sheets_screen.dart';
@@ -7,7 +12,10 @@ import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dar
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
+import 'package:property_valuation/model/live_visit_data_model.dart';
 
+import '../../constant/shared_functions.dart';
+import '../../model/enginer_visit_case_model.dart';
 import '../custom_widgets/text_widgets.dart';
 
 class TechInitiationScreen extends StatefulWidget {
@@ -44,6 +52,102 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   TextEditingController _district = TextEditingController();
   TextEditingController _landmark = TextEditingController();
   TextEditingController _pincode = TextEditingController();
+  String _id = "";
+
+  final SharedPreferencesHelper _sharedPreferencesHelper =
+      SharedPreferencesHelper();
+
+  Future<void> fetchData() async {
+    try {
+      // Ensure you have the userId before calling enginerVisitCaseList
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      if (userId != null) {
+        final String? _id = await enginerVisitCaseList(userId);
+
+        if (_id != null) {
+          await liveVisitbyId(_id);
+
+          // Update UI or perform any other actions based on 'liveVisitbyId' data
+          setState(() {
+            // Update UI if needed
+          });
+        }
+      } else {
+        print('User ID is null');
+      }
+    } catch (e) {
+      print('Error in fetchData: $e');
+      // Handle errors
+    }
+  }
+
+  Future<String?> enginerVisitCaseList(String userId) async {
+    try {
+      Response response = await post(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        final enginerVisitCaseData =
+            EnginerVisitCaseData.fromJson(responseData);
+        _id = enginerVisitCaseData.data.dataarray[0].id;
+        print('_id===>$_id');
+        return enginerVisitCaseData.data.dataarray[0].id;
+      } else {
+        print(
+            'Failed to send userId to the third API. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending userId to the third API: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('An error occurred while fetching data.'),
+      ));
+    }
+  }
+
+  Future<void> liveVisitbyId(String _id) async {
+    try {
+      Response response = await get(Uri.parse(
+          'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$_id'));
+      if (response.statusCode == 200) {
+        setState(() {
+          final jsonData = jsonDecode(response.body);
+          final liveVisitData = LiveVisitData.fromJson(jsonData);
+          print('liveVisitbyId data response: $jsonData');
+          _instituteType.text = liveVisitData.data.institutionType;
+          _instituteName.text = liveVisitData.data.maininstitutionname;
+          __insituteBranch.text = liveVisitData.data.manageInstitutename;
+          String formmatedRequestDate =
+              DateFormat('yyyy-MM-dd').format(liveVisitData.data.requestDate);
+          _dateofrequest.text = formmatedRequestDate;
+          String formmatedVisitDate = DateFormat('yyyy-MM-dd')
+              .format(liveVisitData.data.visitScheduledDate);
+          _dateofvisit.text = formmatedVisitDate;
+          _nameOfApplicant.text = liveVisitData.data.borrowerName;
+          _nameofPerson.text = liveVisitData.data.contactPersonName;
+          _mobileNumber.text = liveVisitData.data.mobileNo1;
+          _filerefNo.text = liveVisitData.data.filerefNo;
+          _cas.text = liveVisitData.data.casNo;
+          _loanType.text = liveVisitData.data.loanType;
+
+          print(_instituteType.text);
+        });
+      }
+    } catch (e) {
+      print('Error : $e');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      fetchData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +232,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _instituteType),
+                CustomTextField(
+                  enabled: false,
+                  controller: _instituteType,
+                  readOnly: true,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -136,7 +244,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _instituteName),
+                CustomTextField(
+                  enabled: false,
+                  controller: _instituteName,
+                  readOnly: true,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -144,20 +256,34 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: __insituteBranch),
+                CustomTextField(
+                  controller: __insituteBranch,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
-                CustomRichText(mainText: 'Date of Request'),
+                CustomRichText(
+                  mainText: 'Date of Request',
+                ),
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _dateofrequest),
+                CustomTextField(
+                  controller: _dateofrequest,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
                 CustomRichText(mainText: 'Date of Visit'),
-                CustomTextField(controller: _dateofvisit),
+                CustomTextField(
+                  controller: _dateofvisit,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -177,7 +303,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _nameOfApplicant),
+                CustomTextField(
+                  controller: _nameOfApplicant,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -185,7 +315,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _nameofPerson),
+                CustomTextField(
+                  controller: _nameofPerson,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -193,7 +327,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _mobileNumber),
+                CustomTextField(
+                  controller: _mobileNumber,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -201,7 +339,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _filerefNo),
+                CustomTextField(
+                  controller: _filerefNo,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -209,7 +351,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _cas),
+                CustomTextField(
+                  controller: _cas,
+                  readOnly: true,
+                  enabled: false,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -235,7 +381,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _loanType),
+                CustomTextField(
+                    readOnly: true, enabled: false, controller: _loanType),
                 SizedBox(
                   height: 10,
                 ),

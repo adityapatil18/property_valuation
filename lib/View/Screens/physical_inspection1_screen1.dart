@@ -374,7 +374,6 @@ class _PhyscialInspection1Screen1State
                 height: 5,
               ),
               CustomTextField(
-                  keyboradType: TextInputType.number,
                   controller: _rentController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

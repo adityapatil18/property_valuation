@@ -84,8 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> enginerVisitCaseList(String userId) async {
     try {
-      await _sharedPreferencesHelper.getUserId(userId);
-
       Response response = await post(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),

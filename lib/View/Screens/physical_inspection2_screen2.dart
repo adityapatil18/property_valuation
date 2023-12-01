@@ -164,7 +164,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomTextField(
                 controller: _pecentageController,
-                keyboradType: TextInputType.number,
               ),
               SizedBox(
                 height: 10,
