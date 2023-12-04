@@ -71,6 +71,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
           setState(() {
             // Update UI if needed
           });
+          await updateLiveVisit(_id);
         }
       } else {
         print('User ID is null');
@@ -133,6 +134,21 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
           print(_instituteType.text);
         });
+      }
+    } catch (e) {
+      print('Error : $e');
+    }
+  }
+
+  Future<void> updateLiveVisit(String id) async {
+    try {
+      Response response = await put(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
+          body: {"id": id, "addressofProperty": _addressRequest.text});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print("api responseee:$responseData");
       }
     } catch (e) {
       print('Error : $e');
