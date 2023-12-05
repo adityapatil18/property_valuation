@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -11,11 +10,14 @@ import 'package:property_valuation/View/Screens/physical_inspection1_screen1.dar
 import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dart';
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
+import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
 import 'package:property_valuation/model/live_visit_data_model.dart';
 
 import '../../constant/shared_functions.dart';
 import '../../model/enginer_visit_case_model.dart';
+import '../../model/loan_type_model.dart';
+import '../../model/location_popup_model.dart';
 import '../custom_widgets/text_widgets.dart';
 
 class TechInitiationScreen extends StatefulWidget {
@@ -53,6 +55,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   TextEditingController _landmark = TextEditingController();
   TextEditingController _pincode = TextEditingController();
   String _id = "";
+  List<String> locationOptions = [];
 
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
@@ -143,15 +146,90 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   Future<void> updateLiveVisit(String id) async {
     try {
       Response response = await put(
-          Uri.parse(
-              "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
-          body: {"id": id, "addressofProperty": _addressRequest.text});
+        Uri.parse(
+            "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
+        body: {
+          "id": id,
+          "CTSSurveyNo": _cts.text,
+          "flatUnitNo": _flatNo.text,
+          "floorwing": _floor.text,
+          "societyName": _socity.text,
+          "plotNo": _plotNo.text,
+          "sector": _sectorColony.text,
+          "roadArea": _road.text,
+          "city": _city.text,
+          "landmark": _landmark.text,
+          "pin": _pincode.text,
+          "district": _district.text,
+        },
+      );
+
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        print("api responseee:$responseData");
+        print("API response: $responseData");
+
+        // Check the response and handle accordingly
+        if (responseData['status'] == 'LiveVisit updated Successfully') {
+          print("Data updated successfully!");
+        } else {
+          print(
+              "Failed to update data. Server response: ${responseData['status']}");
+        }
+      } else {
+        print("Failed to update data. Status code: ${response.statusCode}");
+        print("Response body: ${response.body}");
       }
     } catch (e) {
       print('Error : $e');
+    }
+  }
+
+  Future<List<String>> fetchLocationOptions() async {
+    try {
+      Response response = await get(
+        Uri.parse(
+            "https://apivaluation.techgigs.in/admin/location/get-activelocation_list"), // Replace with your API endpoint
+        // Include any necessary headers or parameters
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print("loaction api response:$responseData");
+        final locationPopUpList = LocationPopUpList.fromJson(responseData);
+        List<String> options =
+            locationPopUpList.data.map((datum) => datum.name).toList();
+        print('list of options:$options');
+        return options;
+      } else {
+        print(
+            'Failed to fetch location options. Status code: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('Error in fetchLocationOptions: $e');
+      return [];
+    }
+  }
+
+  Future<void> fetchLoanTypeDetails() async {
+    try {
+      // Assuming you have an API endpoint for fetching loan type details
+      Response response = await get(
+        Uri.parse(
+            "https://apivaluation.techgigs.in/admin/loan/get-loanactive_list"),
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        LoanType loanType = LoanType.fromJson(responseData);
+        print('loan api response:$responseData');
+        print("loan type:$loanType");
+      } else {
+        print(
+            'Failed to fetch loan type details. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in fetchLoanTypeDetails: $e');
     }
   }
 
@@ -162,6 +240,12 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     setState(() {
       fetchData();
     });
+    fetchLocationOptions().then((options) {
+      setState(() {
+        locationOptions = options;
+      });
+    });
+    fetchLoanTypeDetails();
   }
 
   @override
@@ -480,7 +564,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomTextField(controller: _location),
+                CustomSelectionTextField(
+                    controller: _location, options: locationOptions),
                 SizedBox(
                   height: 10,
                 ),
@@ -535,7 +620,9 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
-          onTap: () {},
+          onTap: () {
+            updateLiveVisit(_id);
+          },
         ));
   }
 }

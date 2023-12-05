@@ -175,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ))
           ],
         ),
-        backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
         drawer: Drawer(
           backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
 
@@ -572,349 +571,336 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        body: Stack(
-          children: [
-            Container(
-              height: MediaQuery.sizeOf(context).height,
-              width: MediaQuery.sizeOf(context).width,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
-                  image: DecorationImage(
-                      image: AssetImage('images/shine.png'),
-                      fit: BoxFit.cover,
-                      opacity: 0.2)),
-              child: Column(
+        body: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Column(
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: 'Monthly Alloc.',
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: 'Case Done',
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
+                      SizedBox(
+                        height: 10,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: 'Total Visit Done',
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
-                      )
+                      TextWidget(
+                          text: 'Monthly Alloc.',
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
                     ],
                   ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Column(
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: "Today's Alloc.",
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: 'Spill Cases',
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
+                      SizedBox(
+                        height: 10,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(55),
-                                border:
-                                    Border.all(width: 2, color: Colors.white)),
-                            child: Center(
-                              child: TextWidget(
-                                  text: '0',
-                                  textcolor: Colors.white,
-                                  textsize: 20,
-                                  textweight: FontWeight.w700),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                              text: 'Tomorrow Alloc.',
-                              textcolor: Colors.white,
-                              textsize: 14,
-                              textweight: FontWeight.w500)
-                        ],
-                      )
+                      TextWidget(
+                          text: 'Case Done',
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 300,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.white)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.flag,
-                                      color: Colors.white,
-                                    ),
-                                    TextWidget(
-                                        text: 'LP-8',
-                                        textcolor: Colors.white,
-                                        textsize: 14,
-                                        textweight: FontWeight.w500)
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.copy,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TechInitiationScreen()));
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          TextWidget(
-                              text: 'Location Name:$locationName',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Borrower Name:$borrowerName',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Institute Name:$instituteName',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Contact Person:',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Address:$address',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Date of visit:$dateOfVisit',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Date of Reschedule:$dateOfReschedule',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          TextWidget(
-                              text: 'Special Instruction:',
-                              textcolor: Colors.white,
-                              textsize: 15,
-                              textweight: FontWeight.w500),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                height: 30,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.white)),
-                                child: TextWidget(
-                                    text: 'Case Status Update',
-                                    textcolor: Colors.white,
-                                    textsize: 12,
-                                    textweight: FontWeight.w500),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: 30,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.white)),
-                                child: TextWidget(
-                                    text: 'Schedule',
-                                    textcolor: Colors.white,
-                                    textsize: 12,
-                                    textweight: FontWeight.w500),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: 30,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.white)),
-                                child: TextWidget(
-                                    text: 'Call',
-                                    textcolor: Colors.white,
-                                    textsize: 12,
-                                    textweight: FontWeight.w500),
-                              ),
-                            ],
-                          )
-                        ],
+                  Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextWidget(
+                          text: 'Total Visit Done',
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
+                    ],
                   )
                 ],
               ),
-            )
-          ],
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextWidget(
+                          text: "Today's Alloc.",
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextWidget(
+                          text: 'Spill Cases',
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(55),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Center(
+                          child: TextWidget(
+                              text: '0',
+                              textcolor: Colors.black,
+                              textsize: 20,
+                              textweight: FontWeight.w700),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextWidget(
+                          text: 'Tomorrow Alloc.',
+                          textcolor: Colors.black,
+                          textsize: 14,
+                          textweight: FontWeight.w500)
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 300,
+                width: MediaQuery.sizeOf(context).width,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.flag,
+                                  color: Colors.red,
+                                ),
+                                TextWidget(
+                                    text: 'LP-8',
+                                    textcolor: Color(0xFF38C0CE),
+                                    textsize: 14,
+                                    textweight: FontWeight.w500)
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.copy,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TechInitiationScreen()));
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextWidget(
+                          text: 'Location Name:$locationName',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Borrower Name:$borrowerName',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Institute Name:$instituteName',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Contact Person:',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Address:$address',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Date of visit:$dateOfVisit',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Date of Reschedule:$dateOfReschedule',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      TextWidget(
+                          text: 'Special Instruction:',
+                          textcolor: Colors.black,
+                          textsize: 15,
+                          textweight: FontWeight.w500),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: TextWidget(
+                                text: 'Case Status Update',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w800),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.purple),
+                            child: TextWidget(
+                                text: 'Schedule',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w800),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 82, 187, 86),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: TextWidget(
+                                text: 'Call',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w800),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ));
   }
 }
