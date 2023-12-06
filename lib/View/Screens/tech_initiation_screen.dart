@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:property_valuation/View/Screens/images_screen.dart';
 import 'package:property_valuation/View/Screens/mm_sheets_screen.dart';
 import 'package:property_valuation/View/Screens/physical_inspection1_screen1.dart';
 import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dart';
+import 'package:property_valuation/View/custom_widgets/custom_dropdown_search.dart';
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
@@ -55,7 +57,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   TextEditingController _landmark = TextEditingController();
   TextEditingController _pincode = TextEditingController();
   String _id = "";
-  List<String> locationOptions = [];
+  // List<String> locationOptions = [];
+  List<LocationListData> locationOptions = [];
+  LocationListData? selectedLocation;
+  LoanType? loanTypeData;
+  String? loanTypeName;
 
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
@@ -145,6 +151,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
   Future<void> updateLiveVisit(String id) async {
     try {
+      String locationId = selectedLocation?.id ?? "";
+
       Response response = await put(
         Uri.parse(
             "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
@@ -161,6 +169,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
           "landmark": _landmark.text,
           "pin": _pincode.text,
           "district": _district.text,
+          // "location": _location.text
+          "location": locationId,
         },
       );
 
@@ -184,7 +194,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     }
   }
 
-  Future<List<String>> fetchLocationOptions() async {
+  Future<List<LocationListData>> fetchLocationOptions() async {
     try {
       Response response = await get(
         Uri.parse(
@@ -195,9 +205,12 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         print("loaction api response:$responseData");
-        final locationPopUpList = LocationPopUpList.fromJson(responseData);
-        List<String> options =
-            locationPopUpList.data.map((datum) => datum.name).toList();
+        // final locationPopUpList = LocationPopUpList.fromJson(responseData);
+        // List<String> options =
+        //     locationPopUpList.data.map((datum) => datum.name).toList();
+        LocationPopUpList locationPopUpList =
+            LocationPopUpList.fromJson(responseData);
+        List<LocationListData> options = locationPopUpList.data;
         print('list of options:$options');
         return options;
       } else {
@@ -243,8 +256,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     fetchLocationOptions().then((options) {
       setState(() {
         locationOptions = options;
+        selectedLocation =
+            locationOptions.isNotEmpty ? locationOptions[0] : null;
       });
     });
+
     fetchLoanTypeDetails();
   }
 
@@ -564,8 +580,97 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                CustomSelectionTextField(
-                    controller: _location, options: locationOptions),
+                // CustomSelectionTextField(
+                //     controller: _location, options: locationOptions),
+
+                DropdownSearch<LocationListData>(
+                  popupProps: PopupProps.menu(
+                    searchDelay: Duration(microseconds: 1),
+                    constraints: BoxConstraints.expand(
+                        height: MediaQuery.sizeOf(context).height,
+                        width: MediaQuery.sizeOf(context).width),
+                    searchFieldProps: TextFieldProps(
+                      controller: _location,
+                      cursorColor: Color(0xFF38C0CE),
+                      autocorrect: true,
+                      decoration: InputDecoration(
+                        prefixIconColor: MaterialStateColor.resolveWith(
+                            (states) => states.contains(MaterialState.focused)
+                                ? Color(0xFF38C0CE)
+                                : Colors.black),
+                        prefixIcon: Icon(
+                          Icons.search,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF38C0CE), width: 2),
+                        ),
+                      ),
+                    ),
+                    fit: FlexFit.loose,
+                    showSelectedItems: true,
+                    showSearchBox: true,
+                    itemBuilder: (context, item, isSelected) {
+                      return Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text('${item.name}'),
+                      );
+                    },
+                  ),
+                  compareFn:
+                      (LocationListData item, LocationListData selectedItem) =>
+                          item.id == selectedItem.id,
+                  selectedItem: selectedLocation,
+                  itemAsString: (LocationListData item) => '${item.name}',
+                  items: locationOptions,
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      isDense: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                    ),
+                  ),
+                  onChanged: (
+                    LocationListData? val,
+                  ) {
+                    setState(() {
+                      selectedLocation = val;
+                      // Additional logic if needed
+                    });
+                  },
+                  onSaved: (LocationListData? newValue) {
+                    setState(() {
+                      selectedLocation = newValue;
+                      // Additional logic if needed
+                    });
+                  },
+                  validator: (LocationListData? value) {
+                    if (value == null || value.name.isEmpty) {
+                      return 'Location is required';
+                    }
+                    return null; // Return null if validation passes
+                  },
+                ),
+
                 SizedBox(
                   height: 10,
                 ),
@@ -624,5 +729,31 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
             updateLiveVisit(_id);
           },
         ));
+  }
+
+  void _showCustomDropdown(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Select Location'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                itemCount: locationOptions.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  LocationListData item = locationOptions[index];
+                  return ListTile(
+                    title: Text(item.name),
+                    onTap: () {
+                      Navigator.pop(context, item);
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        });
   }
 }

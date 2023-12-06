@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       Response response = await post(
         Uri.parse('https://apivaluation.techgigs.in/admin/user/islogin'),
-        body: {"email": email, "password": password},
+        body: {"usercode": email, "password": password},
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());

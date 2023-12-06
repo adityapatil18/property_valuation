@@ -806,46 +806,103 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      TextWidget(
-                          text: 'Location Name:$locationName',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Borrower Name:$borrowerName',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Institute Name:$instituteName',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Contact Person:',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Address:$address',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Date of visit:$dateOfVisit',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Date of Reschedule:$dateOfReschedule',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
-                      TextWidget(
-                          text: 'Special Instruction:',
-                          textcolor: Colors.black,
-                          textsize: 15,
-                          textweight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(
+                                  text: 'Location Name:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Borrower Name:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Institute Name:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Contact Person:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Address:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Date of visit:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Date of Reschedule:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                              TextWidget(
+                                  text: 'Special Instruction:',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w300),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(
+                                  text: '$locationName',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '$borrowerName',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '$instituteName',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '$address',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '$dateOfVisit',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '$dateOfReschedule',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                              TextWidget(
+                                  text: '',
+                                  textcolor: Colors.black,
+                                  textsize: 15,
+                                  textweight: FontWeight.w600),
+                            ],
+                          )
+                        ],
+                      ),
                       SizedBox(
                         height: 10,
                       ),
