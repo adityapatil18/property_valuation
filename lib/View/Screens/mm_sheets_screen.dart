@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:property_valuation/View/Screens/case_status_screen.dart';
+import 'package:property_valuation/View/custom_widgets/custom_mm_textfield.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 
@@ -241,6 +242,17 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
     TextEditingController _length = TextEditingController();
     TextEditingController _width = TextEditingController();
     TextEditingController _areaC = TextEditingController();
+
+    // Update the area based on the current length and width values
+    void _updateArea() {
+      double length = double.tryParse(_length.text) ?? 0.0;
+      double width = double.tryParse(_width.text) ?? 0.0;
+      double areaC = length * width;
+
+      // Set the calculated area in the area text field
+      _areaC.text = areaC.toString();
+    }
+
     List<String> _areaOptions = [
       'Bedroom',
       'Hall',
@@ -273,6 +285,15 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
       'Terrace Area'
     ];
 
+    // Add listeners to length and width text fields
+    _length.addListener(() {
+      _updateArea();
+    });
+
+    _width.addListener(() {
+      _updateArea();
+    });
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -280,6 +301,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
             height: MediaQuery.sizeOf(context).height - 200,
             width: MediaQuery.sizeOf(context).width,
             child: AlertDialog(
+              backgroundColor: Colors.white,
               title: Text('ADD FIELD'),
               content: SingleChildScrollView(
                 child: Column(
@@ -297,48 +319,41 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
+                    CustomMMTextField(
                       controller: _groupHead,
-                      decoration: InputDecoration(
-                          hintText: 'Group Head',
-                          border: UnderlineInputBorder()),
+                      hintText: 'Group Head',
+                      // readOnly: true,
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
+                    CustomMMTextField(
                       controller: _sequence,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          hintText: 'Sequence', border: UnderlineInputBorder()),
+                      hintText: 'Sequence',
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                      controller: _length,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          hintText: 'Length', border: UnderlineInputBorder()),
-                    ),
+                    CustomMMTextField(
+                        controller: _length,
+                        onChanged: (value) {
+                          _updateArea();
+                        },
+                        hintText: 'Length'),
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                      controller: _width,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          hintText: 'Width', border: UnderlineInputBorder()),
-                    ),
+                    CustomMMTextField(
+                        controller: _width,
+                        onChanged: (value) {
+                          _updateArea();
+                        },
+                        hintText: 'Width'),
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                      controller: _areaC,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          hintText: 'Area', border: UnderlineInputBorder()),
-                    ),
+                    CustomMMTextField(
+                        readOnly: true, controller: _areaC, hintText: 'Area')
                   ],
                 ),
               ),

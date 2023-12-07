@@ -159,6 +159,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
         body: {
           "id": id,
           "CTSSurveyNo": _cts.text,
+          "wardname": _wardName.text,
           "flatUnitNo": _flatNo.text,
           "floorwing": _floor.text,
           "societyName": _socity.text,

@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:location/location.dart';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:property_valuation/View/Screens/home_screen.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
@@ -22,6 +25,18 @@ class ImagesScreen extends StatefulWidget {
 }
 
 class _ImagesScreenState extends State<ImagesScreen> {
+  // Completer<GoogleMapController> _controller = Completer();
+  // static const LatLng _center = const LatLng(18.5032584, 73.8203143);
+  // void _onMapCreated(GoogleMapController controller) {
+  //   _controller.complete(controller);
+  // }
+  static final LatLng _kMapCenter =
+      LatLng(19.018255973653343, 72.84793849278007);
+
+  static final CameraPosition _kInitialPosition =
+      CameraPosition(target: _kMapCenter, zoom: 11.0, tilt: 0, bearing: 0);
+  late GoogleMapController _controller;
+
   Color containerColor = Colors.red;
   bool showSecondUI = false;
   late ImagePicker _imagePicker;
@@ -31,6 +46,22 @@ class _ImagesScreenState extends State<ImagesScreen> {
     super.initState();
     _imagePicker = ImagePicker();
   }
+
+  // Future<void> _getCurrentLocation() async {
+  //   try {
+  //     var userLocation = await location.getLocation();
+  //     mapController.animateCamera(
+  //       CameraUpdate.newCameraPosition(
+  //         CameraPosition(
+  //           target: LatLng(userLocation.latitude!, userLocation.longitude!),
+  //           zoom: 15.0,
+  //         ),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print('Error getting location: $e');
+  //   }
+  // }
 
   Future<void> _pickImage() async {
     XFile? pickedImage =
@@ -134,7 +165,14 @@ class _ImagesScreenState extends State<ImagesScreen> {
               Container(
                 height: 420,
                 width: MediaQuery.sizeOf(context).width,
-                color: containerColor,
+                // color: containerColor,
+                child: GoogleMap(
+                    onMapCreated: (controller) {
+                      setState(() {
+                        _controller = controller;
+                      });
+                    },
+                    initialCameraPosition: _kInitialPosition),
               ),
               SizedBox(
                 height: 10,

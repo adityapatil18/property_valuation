@@ -12,6 +12,7 @@ import 'package:property_valuation/View/Screens/profile_screen.dart';
 import 'package:property_valuation/View/Screens/reimbustment_screen.dart';
 import 'package:property_valuation/View/Screens/tech_initiation_screen.dart';
 import 'package:property_valuation/View/Screens/upadate_password_screen.dart';
+import 'package:property_valuation/View/custom_widgets/my_drawer.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 
 import '../../constant/shared_functions.dart';
@@ -42,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
       String? token = await _sharedPreferencesHelper.getToken();
 
       if (token != null) {
+        print('step 2');
+
         // Token is available, proceed with fetching additional data
         String? userId = await saveToken(token);
         await enginerVisitCaseList(userId!);
@@ -84,11 +87,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> enginerVisitCaseList(String userId) async {
     try {
+      print('step3');
+
       Response response = await post(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
           body: {"page": "1", "limit": "2", "search": "", "userID": userId});
       if (response.statusCode == 200) {
+        print('step 4');
+
         var responseData = jsonDecode(response.body);
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
@@ -102,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           dateOfVisit =
               enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
           dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
+          // specialInstruction=enginerVisitCaseData.data.dataarray[0].
           print('Data updated successfully');
         });
       } else {
@@ -120,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchData();
+    setState(() {
+      fetchData();
+    });
   }
 
   @override
@@ -175,788 +185,415 @@ class _HomeScreenState extends State<HomeScreen> {
                 ))
           ],
         ),
-        drawer: Drawer(
-          backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
+        drawer: MyDrawer(),
+        body: RefreshIndicator(
+          color: Color(0xFF38C0CE),
+          onRefresh: () async {
+            setState(() {
+              print('step1');
 
-          // backgroundColor: Colors.grey.shade200,
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                currentAccountPicture: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: Colors.white),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      'images/profile2.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+              fetchData();
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(1, 66, 75, 95).withOpacity(1)),
-                accountName: TextWidget(
-                    text: 'TechGigs',
-                    textcolor: Colors.white,
-                    textsize: 18,
-                    textweight: FontWeight.w500),
-                accountEmail: Text('TechGigs@gmail.com'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'Home',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    // Handle the tap on Home
-                    Navigator.pop(context); // Close the drawer
-                    // Add your navigation logic here
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.history,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'History',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryScreen()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Container(
-                    height: 22,
-                    width: 22,
-                    child: Image.asset(
-                      'images/attendance.png',
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: TextWidget(
-                      text: 'Attendance',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: TextWidget(
-                            text: 'Attendance',
-                            textcolor: Colors.black,
-                            textsize: 20,
-                            textweight: FontWeight.w500),
-                        // content: TextWidget(
-                        //     text: 'Are you sure you want to logout?',
-                        //     textcolor: Colors.black,
-                        //     textsize: 16,
-                        //     textweight: FontWeight.w400),
-                        actions: <Widget>[
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  elevation: MaterialStateProperty.all(1),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5))),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size(50, 30)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF38C0CE),
-                                  )),
-                              onPressed: () {},
-                              child: TextWidget(
-                                  text: 'CHECK IN',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w500)),
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  elevation: MaterialStateProperty.all(1),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5))),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size(50, 30)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF38C0CE),
-                                  )),
-                              onPressed: () {},
-                              child: TextWidget(
-                                  text: 'CHECK OUT',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w500))
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Container(
-                    height: 22,
-                    width: 22,
-                    child: Image.asset(
-                      'images/reim.png',
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: TextWidget(
-                      text: 'Reimbursement',
-                      textcolor: Colors.white,
-                      textsize: 13.5,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReimbustmentScreen()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'Profile',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileScreen()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Image.asset(
-                    'images/about.png',
-                    height: 22,
-                    width: 22,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'About Us',
-                      textcolor: Colors.white,
-                      textsize: 12,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AboutUsScreen()));
-                  },
-                ),
-              ),
-              ListTile(
-                splashColor: Color(0xFF38C0CE),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                ),
-                leading: Image.asset(
-                  'images/contact.png',
-                  height: 22,
-                  width: 22,
-                  color: Colors.white,
-                ),
-                title: TextWidget(
-                    text: 'Contact Us',
-                    textcolor: Colors.white,
-                    textsize: 12.5,
-                    textweight: FontWeight.w500),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContactUsScreen()));
-                },
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  top: BorderSide(color: Colors.white),
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.lock,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'Update Password',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdatePasswordScreen()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.white),
-                )),
-                child: ListTile(
-                  splashColor: Color(0xFF38C0CE),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  ),
-                  title: TextWidget(
-                      text: 'Logout',
-                      textcolor: Colors.white,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: TextWidget(
-                            text: 'Logout',
-                            textcolor: Colors.black,
-                            textsize: 20,
-                            textweight: FontWeight.w500),
-                        content: TextWidget(
-                            text: 'Are you sure you want to logout?',
-                            textcolor: Colors.black,
-                            textsize: 16,
-                            textweight: FontWeight.w400),
-                        actions: <Widget>[
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  elevation: MaterialStateProperty.all(1),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5))),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size(50, 30)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF38C0CE),
-                                  )),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: TextWidget(
-                                  text: 'No',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w500)),
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  elevation: MaterialStateProperty.all(1),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5))),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size(50, 30)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF38C0CE),
-                                  )),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()));
-                              },
-                              child: TextWidget(
-                                  text: 'Yes',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w500))
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: 'Monthly Alloc.',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: 'Case Done',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: 'Total Visit Done',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: "Today's Alloc.",
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: 'Spill Cases',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(55),
-                            border: Border.all(width: 2, color: Colors.black)),
-                        child: Center(
-                          child: TextWidget(
-                              text: '0',
-                              textcolor: Colors.black,
-                              textsize: 20,
-                              textweight: FontWeight.w700),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextWidget(
-                          text: 'Tomorrow Alloc.',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500)
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 300,
-                width: MediaQuery.sizeOf(context).width,
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.flag,
-                                  color: Colors.red,
-                                ),
-                                TextWidget(
-                                    text: 'LP-8',
-                                    textcolor: Color(0xFF38C0CE),
-                                    textsize: 14,
-                                    textweight: FontWeight.w500)
-                              ],
-                            ),
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.copy,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TechInitiationScreen()));
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextWidget(
-                                  text: 'Location Name:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Borrower Name:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Institute Name:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Contact Person:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Address:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Date of visit:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Date of Reschedule:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                              TextWidget(
-                                  text: 'Special Instruction:',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w300),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextWidget(
-                                  text: '$locationName',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '$borrowerName',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '$instituteName',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '$address',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '$dateOfVisit',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '$dateOfReschedule',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                              TextWidget(
-                                  text: '',
-                                  textcolor: Colors.black,
-                                  textsize: 15,
-                                  textweight: FontWeight.w600),
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 30,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
                             child: TextWidget(
-                                text: 'Case Status Update',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w800),
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            height: 30,
-                            width: 100,
-                            decoration: BoxDecoration(
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: 'Monthly Alloc.',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
+                            child: TextWidget(
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: 'Case Done',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
+                            child: TextWidget(
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: 'Total Visit Done',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
+                            child: TextWidget(
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: "Today's Alloc.",
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
+                            child: TextWidget(
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: 'Spill Cases',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(55),
+                              border:
+                                  Border.all(width: 2, color: Colors.black)),
+                          child: Center(
+                            child: TextWidget(
+                                text: '0',
+                                textcolor: Colors.black,
+                                textsize: 20,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: 'Tomorrow Alloc.',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500)
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 320,
+                  width: MediaQuery.sizeOf(context).width,
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.flag,
+                                    color: Colors.red,
+                                  ),
+                                  TextWidget(
+                                      text: 'LP-8',
+                                      textcolor: Color(0xFF38C0CE),
+                                      textsize: 14,
+                                      textweight: FontWeight.w500)
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.copy,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TechInitiationScreen()));
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextWidget(
+                                      text: 'Location Name:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Borrower Name:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Institute Name:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Contact Person:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Address:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Date of visit:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Date of Reschedule:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                  TextWidget(
+                                      text: 'Special Instruction:',
+                                      textcolor: Colors.grey,
+                                      textsize: 15,
+                                      textweight: FontWeight.w400),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextWidget(
+                                      text: '$locationName',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '$borrowerName',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '$instituteName',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '$address',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '$dateOfVisit',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '$dateOfReschedule',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                  TextWidget(
+                                      text: '',
+                                      textcolor: Colors.black,
+                                      textsize: 15,
+                                      textweight: FontWeight.w500),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              height: 30,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
                                 borderRadius: BorderRadius.circular(5),
-                                color: Colors.purple),
-                            child: TextWidget(
-                                text: 'Schedule',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w800),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            height: 30,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 82, 187, 86),
-                              borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: TextWidget(
+                                  text: 'Case Status Update',
+                                  textcolor: Colors.white,
+                                  textsize: 12,
+                                  textweight: FontWeight.w800),
                             ),
-                            child: TextWidget(
-                                text: 'Call',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w800),
-                          ),
-                        ],
-                      )
-                    ],
+                            Container(
+                              alignment: Alignment.center,
+                              height: 30,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.purple),
+                              child: TextWidget(
+                                  text: 'Schedule',
+                                  textcolor: Colors.white,
+                                  textsize: 12,
+                                  textweight: FontWeight.w800),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              height: 30,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 82, 187, 86),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: TextWidget(
+                                  text: 'Call',
+                                  textcolor: Colors.white,
+                                  textsize: 12,
+                                  textweight: FontWeight.w800),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ));
   }
