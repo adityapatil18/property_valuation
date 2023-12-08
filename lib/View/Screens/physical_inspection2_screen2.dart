@@ -145,7 +145,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Physical Status of project',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -170,7 +169,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Type of Property',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -182,7 +180,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Property usage',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -194,7 +191,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Voilation Observed',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -207,7 +203,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Floor No in case of independent unit',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -218,7 +213,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Remark on view from property',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -231,7 +225,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'No of units per floor and position of unit',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -242,7 +235,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Amenities Available in Socity',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -255,7 +247,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Accmodation of unit',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -266,7 +257,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'No of wings in society',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -278,7 +268,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Construction type',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -291,7 +280,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'No of storyes',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -302,7 +290,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'No of lifts',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -314,7 +301,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Exterior',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -326,7 +312,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Interior',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -338,7 +323,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Fitting',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -350,7 +334,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Flooring',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -362,7 +345,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Window',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -374,7 +356,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Door',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -386,7 +367,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Property Age',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -397,7 +377,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Mainataince level of society/project',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -408,7 +387,7 @@ class _PhysicalInspection2Screen2State
                 height: 10,
               ),
               CustomRichText(
-                mainText: 'Property_acc_value_HDFC',
+                mainText: 'Occupancy Level',
               ),
               SizedBox(
                 height: 5,
@@ -457,7 +436,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Type of entire bldg',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -481,7 +459,6 @@ class _PhysicalInspection2Screen2State
               CustomRichText(
                 mainText:
                     'Wheather surrounded by Mosques,Temples,Burning ghat,Cermatorium,etc.',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -492,7 +469,6 @@ class _PhysicalInspection2Screen2State
               ),
               CustomRichText(
                 mainText: 'Rsidual Age',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,

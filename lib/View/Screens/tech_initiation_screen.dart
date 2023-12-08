@@ -10,6 +10,7 @@ import 'package:property_valuation/View/Screens/mm_sheets_screen.dart';
 import 'package:property_valuation/View/Screens/physical_inspection1_screen1.dart';
 import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dart';
 import 'package:property_valuation/View/custom_widgets/custom_dropdown_search.dart';
+import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
@@ -62,6 +63,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   LocationListData? selectedLocation;
   LoanType? loanTypeData;
   String? loanTypeName;
+  bool isLoading = true;
 
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
@@ -78,7 +80,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
           // Update UI or perform any other actions based on 'liveVisitbyId' data
           setState(() {
-            // Update UI if needed
+            isLoading = false;
           });
           await updateLiveVisit(_id);
         }
@@ -339,381 +341,387 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
             })
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomRichText(mainText: 'Insitute Type'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  enabled: false,
-                  controller: _instituteType,
-                  readOnly: true,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Insitute Name'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  enabled: false,
-                  controller: _instituteName,
-                  readOnly: true,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Insitute Branch'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: __insituteBranch,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(
-                  mainText: 'Date of Request',
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _dateofrequest,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Date of Visit'),
-                CustomTextField(
-                  controller: _dateofvisit,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Divider(
-                  thickness: 1,
-                  color: Color(0xFF38C0CE),
-                ),
-                TextWidget(
-                    text: 'GENERAL DETAILS',
-                    textcolor: Colors.black,
-                    textsize: 18,
-                    textweight: FontWeight.w500),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Name of the Applicant'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _nameOfApplicant,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Name of contact person'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _nameofPerson,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Mobile Number'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _mobileNumber,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'File Ref Number'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _filerefNo,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'CAS No'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                  controller: _cas,
-                  readOnly: true,
-                  enabled: false,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(
-                    mainText: 'Address of the Property(As per request)'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _addressRequest),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(
-                    mainText: 'Adddressof the property(As per Inspection)'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _addressInspection),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Loan type/Product'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(
-                    readOnly: true, enabled: false, controller: _loanType),
-                SizedBox(
-                  height: 10,
-                ),
-                Divider(
-                  thickness: 1,
-                  color: Color(0xFF38C0CE),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'CTS/Survey No & Village'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _cts),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Ward Name/No.'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _wardName),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Flat No./Unit No.'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _flatNo),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Floor,Wing'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _floor),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Socity/Building name'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _socity),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Plot No.'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _plotNo),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Sector/Colony/Locality'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _sectorColony),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Road/other'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _road),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(
-                  mainText: 'Location',
-                  isRequired: true,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                // CustomSelectionTextField(
-                //     controller: _location, options: locationOptions),
-
-                DropdownSearch<LocationListData>(
-                  popupProps: PopupProps.menu(
-                    searchDelay: Duration(microseconds: 1),
-                    constraints: BoxConstraints.expand(
-                        height: MediaQuery.sizeOf(context).height,
-                        width: MediaQuery.sizeOf(context).width),
-                    searchFieldProps: TextFieldProps(
-                      controller: _location,
-                      cursorColor: Color(0xFF38C0CE),
-                      autocorrect: true,
-                      decoration: InputDecoration(
-                        prefixIconColor: MaterialStateColor.resolveWith(
-                            (states) => states.contains(MaterialState.focused)
-                                ? Color(0xFF38C0CE)
-                                : Colors.black),
-                        prefixIcon: Icon(
-                          Icons.search,
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xFF38C0CE), width: 2),
-                        ),
+        body: isLoading
+            ? Center(
+                child: LoadingIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomRichText(mainText: 'Insitute Type'),
+                      SizedBox(
+                        height: 5,
                       ),
-                    ),
-                    fit: FlexFit.loose,
-                    showSelectedItems: true,
-                    showSearchBox: true,
-                    itemBuilder: (context, item, isSelected) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text('${item.name}'),
-                      );
-                    },
+                      CustomTextField(
+                        enabled: false,
+                        controller: _instituteType,
+                        readOnly: true,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Insitute Name'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        enabled: false,
+                        controller: _instituteName,
+                        readOnly: true,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Insitute Branch'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: __insituteBranch,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(
+                        mainText: 'Date of Request',
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _dateofrequest,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Date of Visit'),
+                      CustomTextField(
+                        controller: _dateofvisit,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Color(0xFF38C0CE),
+                      ),
+                      TextWidget(
+                          text: 'GENERAL DETAILS',
+                          textcolor: Colors.black,
+                          textsize: 18,
+                          textweight: FontWeight.w500),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Name of the Applicant'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _nameOfApplicant,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Name of contact person'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _nameofPerson,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Mobile Number'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _mobileNumber,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'File Ref Number'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _filerefNo,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'CAS No'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                        controller: _cas,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(
+                          mainText: 'Address of the Property(As per request)'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _addressRequest),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(
+                          mainText:
+                              'Adddressof the property(As per Inspection)'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _addressInspection),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Loan type/Product'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(
+                          readOnly: true,
+                          enabled: false,
+                          controller: _loanType),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Color(0xFF38C0CE),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'CTS/Survey No & Village'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _cts),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Ward Name/No.'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _wardName),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Flat No./Unit No.'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _flatNo),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Floor,Wing'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _floor),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Socity/Building name'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _socity),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Plot No.'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _plotNo),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Sector/Colony/Locality'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _sectorColony),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Road/other'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _road),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(
+                        mainText: 'Location',
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      DropdownSearch<LocationListData>(
+                        popupProps: PopupProps.menu(
+                          searchDelay: Duration(microseconds: 1),
+                          constraints: BoxConstraints.expand(
+                              height: MediaQuery.sizeOf(context).height,
+                              width: MediaQuery.sizeOf(context).width),
+                          searchFieldProps: TextFieldProps(
+                            controller: _location,
+                            cursorColor: Color(0xFF38C0CE),
+                            autocorrect: true,
+                            decoration: InputDecoration(
+                              prefixIconColor: MaterialStateColor.resolveWith(
+                                  (states) =>
+                                      states.contains(MaterialState.focused)
+                                          ? Color(0xFF38C0CE)
+                                          : Colors.black),
+                              prefixIcon: Icon(
+                                Icons.search,
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color(0xFF38C0CE), width: 2),
+                              ),
+                            ),
+                          ),
+                          fit: FlexFit.loose,
+                          showSelectedItems: true,
+                          showSearchBox: true,
+                          itemBuilder: (context, item, isSelected) {
+                            return Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text('${item.name}'),
+                            );
+                          },
+                        ),
+                        compareFn: (LocationListData item,
+                                LocationListData selectedItem) =>
+                            item.id == selectedItem.id,
+                        selectedItem: selectedLocation,
+                        itemAsString: (LocationListData item) => '${item.name}',
+                        items: locationOptions,
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            isDense: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                style: BorderStyle.solid,
+                                color: Colors.black,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                style: BorderStyle.solid,
+                                color: Colors.black,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                          ),
+                        ),
+                        onChanged: (
+                          LocationListData? val,
+                        ) {
+                          setState(() {
+                            selectedLocation = val;
+                            // Additional logic if needed
+                          });
+                        },
+                        onSaved: (LocationListData? newValue) {
+                          setState(() {
+                            selectedLocation = newValue;
+                            // Additional logic if needed
+                          });
+                        },
+                        validator: (LocationListData? value) {
+                          if (value == null || value.name.isEmpty) {
+                            return 'Location is required';
+                          }
+                          return null; // Return null if validation passes
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'City'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _city),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'District'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _district),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(
+                        mainText: 'Landmark',
+                        isRequired: true,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _landmark),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomRichText(mainText: 'Pincode'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      CustomTextField(controller: _pincode),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
-                  compareFn:
-                      (LocationListData item, LocationListData selectedItem) =>
-                          item.id == selectedItem.id,
-                  selectedItem: selectedLocation,
-                  itemAsString: (LocationListData item) => '${item.name}',
-                  items: locationOptions,
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      isDense: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          style: BorderStyle.solid,
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          style: BorderStyle.solid,
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                    ),
-                  ),
-                  onChanged: (
-                    LocationListData? val,
-                  ) {
-                    setState(() {
-                      selectedLocation = val;
-                      // Additional logic if needed
-                    });
-                  },
-                  onSaved: (LocationListData? newValue) {
-                    setState(() {
-                      selectedLocation = newValue;
-                      // Additional logic if needed
-                    });
-                  },
-                  validator: (LocationListData? value) {
-                    if (value == null || value.name.isEmpty) {
-                      return 'Location is required';
-                    }
-                    return null; // Return null if validation passes
-                  },
                 ),
-
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'City'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _city),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'District'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _district),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(
-                  mainText: 'Landmark',
-                  isRequired: true,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _landmark),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomRichText(mainText: 'Pincode'),
-                SizedBox(
-                  height: 5,
-                ),
-                CustomTextField(controller: _pincode),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
         bottomNavigationBar: GestureDetector(
           child: Container(
             alignment: Alignment.center,

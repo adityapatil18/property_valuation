@@ -2,16 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:property_valuation/View/Screens/about_us_screen.dart';
-import 'package:property_valuation/View/Screens/attendance_screen.dart';
-import 'package:property_valuation/View/Screens/contact_us_screen.dart';
-import 'package:property_valuation/View/Screens/history_screen.dart';
-import 'package:property_valuation/View/Screens/login_screen.dart';
-import 'package:property_valuation/View/Screens/policy_screen.dart';
-import 'package:property_valuation/View/Screens/profile_screen.dart';
-import 'package:property_valuation/View/Screens/reimbustment_screen.dart';
+
 import 'package:property_valuation/View/Screens/tech_initiation_screen.dart';
-import 'package:property_valuation/View/Screens/upadate_password_screen.dart';
+import 'package:property_valuation/View/custom_widgets/custom_circle_container.dart';
+import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/my_drawer.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 
@@ -36,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? dateOfVisit;
   DateTime? dateOfReschedule;
   String specialInstruction = "";
+  bool _isLoading = true;
 
   Future<void> fetchData() async {
     try {
@@ -48,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // Token is available, proceed with fetching additional data
         String? userId = await saveToken(token);
         await enginerVisitCaseList(userId!);
+        setState(() {
+          _isLoading = false;
+        });
       } else {
         print('Token not available.');
         // Handle the case where the token is not available
@@ -186,415 +184,283 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         drawer: MyDrawer(),
-        body: RefreshIndicator(
-          color: Color(0xFF38C0CE),
-          onRefresh: () async {
-            setState(() {
-              print('step1');
+        body: _isLoading
+            ? Center(child: LoadingIndicator())
+            : RefreshIndicator(
+                color: Color(0xFF38C0CE),
+                onRefresh: () async {
+                  setState(() {
+                    print('step1');
 
-              fetchData();
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: 'Monthly Alloc.',
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: 'Case Done',
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: 'Total Visit Done',
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: "Today's Alloc.",
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: 'Spill Cases',
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(55),
-                              border:
-                                  Border.all(width: 2, color: Colors.black)),
-                          child: Center(
-                            child: TextWidget(
-                                text: '0',
-                                textcolor: Colors.black,
-                                textsize: 20,
-                                textweight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextWidget(
-                            text: 'Tomorrow Alloc.',
-                            textcolor: Colors.black,
-                            textsize: 14,
-                            textweight: FontWeight.w500)
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 320,
-                  width: MediaQuery.sizeOf(context).width,
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.black)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
+                    fetchData();
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CustomCricleWidget(
+                              labelText: 'Monthly Alloc.',
+                              value: '0',
+                              containerColor: Color(0xFF38C0CE)),
+                          CustomCricleWidget(
+                              labelText: 'Case Done',
+                              value: '0',
+                              containerColor: Colors.amber),
+                          CustomCricleWidget(
+                              labelText: 'Total Visit Done',
+                              value: '0',
+                              containerColor: Colors.green),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CustomCricleWidget(
+                              labelText: "Today's Alloc.",
+                              value: '0',
+                              containerColor: Colors.lightBlue),
+                          CustomCricleWidget(
+                              labelText: 'Spill Cases',
+                              value: '0',
+                              containerColor: Colors.red),
+                          CustomCricleWidget(
+                              labelText: 'Tomorrow Alloc.',
+                              value: '0',
+                              containerColor: Colors.orange)
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 320,
+                        width: MediaQuery.sizeOf(context).width,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Icon(
-                                    Icons.flag,
-                                    color: Colors.red,
-                                  ),
-                                  TextWidget(
-                                      text: 'LP-8',
-                                      textcolor: Color(0xFF38C0CE),
-                                      textsize: 14,
-                                      textweight: FontWeight.w500)
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.copy,
-                                      color: Colors.black,
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.flag,
+                                          color: Colors.red,
+                                        ),
+                                        TextWidget(
+                                            text: 'LP-8',
+                                            textcolor: Color(0xFF38C0CE),
+                                            textsize: 14,
+                                            textweight: FontWeight.w500)
+                                      ],
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TechInitiationScreen()));
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Colors.black,
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.copy,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TechInitiationScreen()));
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
                                 children: [
-                                  TextWidget(
-                                      text: 'Location Name:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Borrower Name:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Institute Name:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Contact Person:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Address:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Date of visit:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Date of Reschedule:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
-                                  TextWidget(
-                                      text: 'Special Instruction:',
-                                      textcolor: Colors.grey,
-                                      textsize: 15,
-                                      textweight: FontWeight.w400),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextWidget(
+                                            text: 'Location Name:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Borrower Name:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Institute Name:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Contact Person:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Address:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Date of visit:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Date of Reschedule:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                        TextWidget(
+                                            text: 'Special Instruction:',
+                                            textcolor: Colors.grey,
+                                            textsize: 15,
+                                            textweight: FontWeight.w400),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextWidget(
+                                            text: '$locationName',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '$borrowerName',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '$instituteName',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '$address',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '$dateOfVisit',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '$dateOfReschedule',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                        TextWidget(
+                                            text: '',
+                                            textcolor: Colors.black,
+                                            textsize: 15,
+                                            textweight: FontWeight.w500),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  TextWidget(
-                                      text: '$locationName',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '$borrowerName',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '$instituteName',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '$address',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '$dateOfVisit',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '$dateOfReschedule',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
-                                  TextWidget(
-                                      text: '',
-                                      textcolor: Colors.black,
-                                      textsize: 15,
-                                      textweight: FontWeight.w500),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    height: 30,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: TextWidget(
+                                        text: 'Case Status Update',
+                                        textcolor: Colors.white,
+                                        textsize: 12,
+                                        textweight: FontWeight.w800),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    height: 30,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.purple),
+                                    child: TextWidget(
+                                        text: 'Schedule',
+                                        textcolor: Colors.white,
+                                        textsize: 12,
+                                        textweight: FontWeight.w800),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    height: 30,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 82, 187, 86),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: TextWidget(
+                                        text: 'Call',
+                                        textcolor: Colors.white,
+                                        textsize: 12,
+                                        textweight: FontWeight.w800),
+                                  ),
                                 ],
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: TextWidget(
-                                  text: 'Case Status Update',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w800),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.purple),
-                              child: TextWidget(
-                                  text: 'Schedule',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w800),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 82, 187, 86),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: TextWidget(
-                                  text: 'Call',
-                                  textcolor: Colors.white,
-                                  textsize: 12,
-                                  textweight: FontWeight.w800),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ));
+                ),
+              ));
   }
 }

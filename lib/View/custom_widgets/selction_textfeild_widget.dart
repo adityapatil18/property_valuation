@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class CustomSelectionTextField extends StatefulWidget {
   final TextEditingController controller;
   final List<String> options;
+  final Function(String)? onChanged;
 
   const CustomSelectionTextField({
     required this.controller,
     required this.options,
+    this.onChanged,
     Key? key,
   }) : super(key: key);
 
@@ -21,6 +23,7 @@ class _CustomSelectionTextFieldState extends State<CustomSelectionTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onChanged,
       controller: widget.controller,
       onTap: () {
         _toggleOptionsDialog();

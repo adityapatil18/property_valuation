@@ -218,7 +218,6 @@ class _PhyscialInspection1Screen1State
               ),
               const CustomRichText(
                 mainText: 'Infrastructure of surrounding area',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -248,7 +247,6 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Neighbourhood Type',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -261,25 +259,18 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Distance from Bank/FI Branch',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _distnacefrombank,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _distnacefrombank,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: "Locality Connectivity from CBD",
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -291,7 +282,6 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Proximity to Amentites eg School,Mall etc',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -303,55 +293,37 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Name of nearest hospital',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _nearestHospitalController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _nearestHospitalController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Condition and width of approch road',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _roadConditionController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _roadConditionController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Name of nearest bus stop',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _bustopNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _bustopNameController,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -368,25 +340,18 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Rent',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _rentController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _rentController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Zone as per city master Plan(DP)',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -403,13 +368,8 @@ class _PhyscialInspection1Screen1State
                 height: 5,
               ),
               CustomTextField(
-                  controller: _rentController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _rentController,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -580,43 +540,30 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Name of person me at site',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _sitePersonNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _sitePersonNameController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Name of society board',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _societyNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _societyNameController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Property occupied/vaccant',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -634,19 +581,13 @@ class _PhyscialInspection1Screen1State
                 height: 5,
               ),
               CustomTextField(
-                  controller: _occupantNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _occupantNameController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Property occupied/vaccant',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
@@ -659,37 +600,49 @@ class _PhyscialInspection1Screen1State
               ),
               CustomRichText(
                 mainText: 'Occupied Since',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _occupiedSinceController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _occupiedSinceController,
+              ),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
                 mainText: 'Name of reported owner as per site information',
-                isRequired: true,
               ),
               SizedBox(
                 height: 5,
               ),
               CustomTextField(
-                  controller: _nameofReportedOwnerController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
+                controller: _nameofReportedOwnerController,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              CustomRichText(
+                mainText: 'Compound wall and gates and security Average',
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              CustomTextField(
+                controller: _nameofReportedOwnerController,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              CustomRichText(
+                mainText: 'Occupancy of Building',
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              CustomTextField(
+                controller: _nameofReportedOwnerController,
+              ),
               SizedBox(
                 height: 10,
               ),
