@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:http/http.dart';
+import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../custom_widgets/popup_menu.dart';
 import '../custom_widgets/text_widgets.dart';
@@ -23,9 +29,23 @@ class PhyscialInspection1Screen1 extends StatefulWidget {
 
 class _PhyscialInspection1Screen1State
     extends State<PhyscialInspection1Screen1> {
-  List<String> options = ['good', 'bad', 'excellent', 'super', 'great'];
+  List<String> infrastructueOptions = [
+    'good',
+    'bad',
+    'excellent',
+    'super',
+    'great'
+  ];
   bool _validate = false;
-  String? selectedOption;
+  String selectedInfrastruture = "";
+  String selctedNeighbour = "";
+  String selectedlocality = "";
+  String selectedproximity = "";
+  String selctedMarketability = "";
+  String selctedZone = "";
+  String selctedBoundries = "";
+  String selectedRelationship = "";
+  String selectedPropertyOccupied = "";
   List<String> neighborhoodTypeoptionss = [
     "Aristrocrat",
     "Prime Residentaial",
@@ -95,7 +115,7 @@ class _PhyscialInspection1Screen1State
   List<String>? filteredOptions;
   bool isEditable = false;
 
-  TextEditingController _textController = TextEditingController();
+  TextEditingController _infrastructureController = TextEditingController();
   TextEditingController _ratingController = TextEditingController();
   TextEditingController _distanceFromLandmarkRailwayController =
       TextEditingController();
@@ -121,6 +141,40 @@ class _PhyscialInspection1Screen1State
   TextEditingController _occupiedSinceController = TextEditingController();
   TextEditingController _nameofReportedOwnerController =
       TextEditingController();
+
+  Future<void> updateLiveVisit() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('2');
+
+    final String? id = prefs.getString("id");
+    print("id is:$id");
+
+    try {
+      Map<String, dynamic> requestBody = {
+        "DistancefromLandmark": _distanceFromLandmarkRailwayController.text,
+      };
+
+      String phsicaljson = jsonEncode(requestBody);
+      // requestBody["mmsheet"] = mmsheetJson;
+      print("# $phsicaljson");
+      Response response = await put(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
+          body: {"id": id, "PhysicalInI": phsicaljson});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print("API response: ${response.body}");
+
+        print("API response: $responseData");
+        print("PUT request successful");
+        print("Response status code: ${response.statusCode}");
+      } else {
+        print("error is :${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("Error during PUT request: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,8 +276,46 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _ratingController, options: options),
+              CustomDropdownSearch(
+                controller: _infrastructureController,
+                items: infrastructueOptions,
+                selectedItem: selectedInfrastruture,
+                onChanged: (value) {
+                  selectedInfrastruture = value!;
+                },
+              ),
+              // DropdownSearch(
+              //   popupProps: PopupProps.menu(
+              //     searchDelay: Duration(microseconds: 1),
+              //     constraints: BoxConstraints.expand(
+              //         height: MediaQuery.sizeOf(context).height,
+              //         width: MediaQuery.sizeOf(context).width),
+              //     searchFieldProps: TextFieldProps(
+              //       cursorColor: Color(0xFF38C0CE),
+              //       decoration: InputDecoration(
+              //         prefixIconColor: MaterialStateColor.resolveWith(
+              //             (states) => states.contains(MaterialState.focused)
+              //                 ? Color(0xFF38C0CE)
+              //                 : Colors.black),
+              //         prefixIcon: Icon(
+              //           Icons.search,
+              //         ),
+              //         focusedBorder: UnderlineInputBorder(
+              //           borderSide:
+              //               BorderSide(color: Color(0xFF38C0CE), width: 2),
+              //         ),
+              //       ),
+              //     ),
+              //     fit: FlexFit.loose,
+              //     showSearchBox: true,
+              //   ),
+              //   items: infrastructueOptions,
+              //   selectedItem: selectedOption,
+              //   enabled: true,
+              //   onChanged: (value) {
+              //     selectedOption = value;
+              //   },
+              // ),
               SizedBox(
                 height: 10,
               ),
@@ -251,9 +343,14 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _neighbourhoodTypeController,
-                  options: neighborhoodTypeoptionss),
+              CustomDropdownSearch(
+                controller: _neighbourhoodTypeController,
+                items: neighborhoodTypeoptionss,
+                selectedItem: selctedNeighbour,
+                onChanged: (value) {
+                  selctedNeighbour = value!;
+                },
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -275,8 +372,14 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _localityRatingController, options: options),
+              CustomDropdownSearch(
+                controller: _localityRatingController,
+                items: infrastructueOptions,
+                selectedItem: selectedlocality,
+                onChanged: (value) {
+                  selectedlocality = value!;
+                },
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -286,8 +389,13 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _proximityController, options: options),
+              CustomDropdownSearch(
+                  items: infrastructueOptions,
+                  selectedItem: selectedproximity,
+                  onChanged: (value) {
+                    selectedproximity = value!;
+                  },
+                  controller: _proximityController),
               SizedBox(
                 height: 10,
               ),
@@ -333,8 +441,13 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _marketablityController, options: options),
+              CustomDropdownSearch(
+                  items: infrastructueOptions,
+                  selectedItem: selctedZone,
+                  onChanged: (value) {
+                    selctedZone = value!;
+                  },
+                  controller: _ZoneDpController),
               SizedBox(
                 height: 10,
               ),
@@ -356,8 +469,13 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _ZoneDpController, options: zones),
+              CustomDropdownSearch(
+                  items: zones,
+                  selectedItem: selctedZone,
+                  onChanged: (value) {
+                    selctedZone = value!;
+                  },
+                  controller: _ZoneDpController),
               SizedBox(
                 height: 10,
               ),
@@ -379,9 +497,13 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _boundiresMatchingController,
-                  options: boundiresMatching),
+              CustomDropdownSearch(
+                  items: boundiresMatching,
+                  selectedItem: selctedBoundries,
+                  onChanged: (value) {
+                    selctedBoundries = value!;
+                  },
+                  controller: _boundiresMatchingController),
               SizedBox(
                 height: 10,
               ),
@@ -568,14 +690,18 @@ class _PhyscialInspection1Screen1State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _propertyOccupiedORVaccantController,
-                  options: propertOccupiedOptions),
+              CustomDropdownSearch(
+                  items: propertOccupiedOptions,
+                  selectedItem: selectedPropertyOccupied,
+                  onChanged: (value) {
+                    selectedPropertyOccupied = value!;
+                  },
+                  controller: _propertyOccupiedORVaccantController),
               SizedBox(
                 height: 10,
               ),
               CustomRichText(
-                mainText: 'Relation of occupant with customer',
+                mainText: 'Name of occupant',
               ),
               SizedBox(
                 height: 5,
@@ -587,14 +713,18 @@ class _PhyscialInspection1Screen1State
                 height: 10,
               ),
               CustomRichText(
-                mainText: 'Property occupied/vaccant',
+                mainText: 'Relationship of occupant with customer',
               ),
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _occupantRelationshipController,
-                  options: occupantRelationOptions),
+              CustomDropdownSearch(
+                  items: occupantRelationOptions,
+                  selectedItem: selectedRelationship,
+                  onChanged: (value) {
+                    selectedRelationship = value!;
+                  },
+                  controller: _occupantRelationshipController),
               SizedBox(
                 height: 10,
               ),
@@ -662,17 +792,11 @@ class _PhyscialInspection1Screen1State
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {},
+        onTap: () {
+          updateLiveVisit();
+        },
       ),
     );
-  }
-
-  void _selectOption(String option) {
-    setState(() {
-      selectedOption = option;
-      _textController.text = option;
-    });
-    Navigator.of(context).pop(); // Close the dialog
   }
 
   Widget _buildEditableTextField() {

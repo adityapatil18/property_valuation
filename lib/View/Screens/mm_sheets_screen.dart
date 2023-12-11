@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:property_valuation/View/Screens/case_status_screen.dart';
 import 'package:property_valuation/View/custom_widgets/custom_mm_textfield.dart';
+import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
+import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../custom_widgets/popup_menu.dart';
 import '../custom_widgets/text_widgets.dart';
@@ -23,6 +28,8 @@ class MMSheetsScreen extends StatefulWidget {
 
 class _MMSheetsScreenState extends State<MMSheetsScreen> {
   String selectedOption = "";
+  bool _isLoading = true;
+
   final List<DataRow> _rows = [];
   TextEditingController _groupHead = TextEditingController();
   TextEditingController _area = TextEditingController();
@@ -35,14 +42,92 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
 
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<void> updateLiveVisit(String id, List<Map<String, dynamic>> mmsheet) async {
-    try {
-      Response response = await put(Uri.parse(
-          "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
-        body: {
+  Future<void> updateLiveVisit() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('2');
 
-        }  );
-    } catch (e) {}
+    final String? id = prefs.getString("id");
+    print("id is:$id");
+
+    try {
+      Map<String, dynamic> requestBody = {
+        "rows": _rows.map((row) {
+          return {
+            "grouphead": _groupHead.text,
+            "name": _area.text,
+            "sequence": _sequence.text,
+            "length": _length.text,
+            "width": _width.text,
+            "area": _areaC.text,
+          };
+        }).toList(),
+        "mmsheetType": selectedOption,
+        "BalconyTotal": getCategoryTotalArea('Balcony'),
+        "CarpetAreaTotal": getCategoryTotalArea('Carpet Area'),
+        "OtherAreaTotal": getCategoryTotalArea('Other Area'),
+        "RefugeAreaTotal": getCategoryTotalArea('Refuge Area'),
+        "TerraceAreaTotal": getCategoryTotalArea('Terrace Area'),
+      };
+      // Convert the 'mmsheet' parameter to a JSON-encoded string
+      String mmsheetJson = jsonEncode(requestBody);
+      // requestBody["mmsheet"] = mmsheetJson;
+      print("# $mmsheetJson");
+      Response response = await put(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
+          body: {"id": id, "mmsheet": mmsheetJson});
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print("API response: ${response.body}");
+
+        print("API response: $responseData");
+        print("PUT request successful");
+        print("Response status code: ${response.statusCode}");
+        // print("Response body: ${response.body}");
+        // Reset text controllers after a successful API call
+        _groupHead.text = '';
+        _area.text = '';
+        _sequence.text = '';
+        _length.text = '';
+        _width.text = '';
+        _areaC.text = '';
+      } else {
+        print("error is :${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("Error during PUT request: $e");
+    }
+  }
+
+  double getCategoryTotalArea(String category) {
+    // Calculate the total area for a specific category
+    return _selectedCategories
+        .where((item) => item['category'] == category)
+        .map((item) => double.parse(item['area']!))
+        .fold(0, (prev, area) => prev + area);
+  }
+
+  Future<void> loadData() async {
+    // Simulate loading data from API
+    await Future.delayed(Duration(seconds: 2));
+    // Set your data loading logic here
+
+    // Simulate loading additional UI data
+    await Future.delayed(Duration(seconds: 2));
+    // Set your additional UI loading logic here
+
+    // Set _isLoading to false when all data is loaded
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Call loadData when the state is initialized
+    loadData();
   }
 
   @override
@@ -120,153 +205,158 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
             })
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextWidget(
-                    text: 'Area Type',
-                    textcolor: Colors.black,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
-                RadioListTile(
-                  value: 'residential',
-                  groupValue: selectedOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedOption = value!;
-                    });
-                  },
-                  title: TextWidget(
-                      text: 'Residential',
-                      textcolor: Colors.black,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                ),
-                RadioListTile(
-                  value: 'commercial',
-                  groupValue: selectedOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedOption = value!;
-                    });
-                  },
-                  title: TextWidget(
-                      text: 'Commercial',
-                      textcolor: Colors.black,
-                      textsize: 14,
-                      textweight: FontWeight.w500),
-                ),
-                TextWidget(
-                    text: 'Dimensions',
-                    textcolor: Colors.black,
-                    textsize: 16,
-                    textweight: FontWeight.w500),
-                SizedBox(
-                  height: 20,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                      border: TableBorder.all(color: Colors.black),
-                      headingRowColor:
-                          MaterialStatePropertyAll(Color(0xFF38C0CE)),
-                      columnSpacing: 16.0,
-                      horizontalMargin: 12.0,
-                      columns: [
-                        DataColumn(
-                          label: Text('               '),
-                        ),
-                        DataColumn(
-                          label: Text('     Group Head     '),
-                        ),
-                        DataColumn(
-                          label: Text('     Name     '),
-                        ),
-                        DataColumn(
-                          label: Text('     Sequence     '),
-                        ),
-                        DataColumn(
-                          label: Text('     Length     '),
-                        ),
-                        DataColumn(
-                          label: Text('     Width     '),
-                        ),
-                        DataColumn(
-                          label: Text('      Area     '),
-                        )
-                      ],
-                      rows: _rows),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Colors.green)),
-                    onPressed: () {
-                      setState(() {
-                        _showAddFieldDialog(context);
-                      });
-                      // _addDataRow(_groupHead.text, _area.text, _sequence.text,
-                      //     _length.text, _width.text, _areaC.text);
-                    },
-                    child: TextWidget(
-                        text: 'Add Field',
-                        textcolor: Colors.white,
-                        textsize: 10,
-                        textweight: FontWeight.w500)),
-                SizedBox(
-                  height: 40,
-                ),
-                DataTable(
-                  border: TableBorder.all(color: Colors.black),
-                  headingRowColor: MaterialStatePropertyAll(Color(0xFF38C0CE)),
-                  columnSpacing: 20.0,
-                  horizontalMargin: 20.0,
-                  columns: [
-                    DataColumn(
-                      label: Text('Type'),
-                    ),
-                    DataColumn(label: Text('Area'))
-                  ],
-                  rows: _selectedCategories.map((category) {
-                    return DataRow(cells: [
-                      DataCell(Text(category['category']!)),
-                      DataCell(Text(category['area']!)),
-                    ]);
-                  }).toList(),
+        body: _isLoading
+            ? Center(
+                child: LoadingIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget(
+                          text: 'Area Type',
+                          textcolor: Colors.black,
+                          textsize: 16,
+                          textweight: FontWeight.w500),
+                      RadioListTile(
+                        value: 'residential',
+                        groupValue: selectedOption,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedOption = value!;
+                          });
+                        },
+                        title: TextWidget(
+                            text: 'Residential',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500),
+                      ),
+                      RadioListTile(
+                        value: 'commercial',
+                        groupValue: selectedOption,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedOption = value!;
+                          });
+                        },
+                        title: TextWidget(
+                            text: 'Commercial',
+                            textcolor: Colors.black,
+                            textsize: 14,
+                            textweight: FontWeight.w500),
+                      ),
+                      TextWidget(
+                          text: 'Dimensions',
+                          textcolor: Colors.black,
+                          textsize: 16,
+                          textweight: FontWeight.w500),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                            border: TableBorder.all(color: Colors.black),
+                            headingRowColor:
+                                MaterialStatePropertyAll(Color(0xFF38C0CE)),
+                            columnSpacing: 16.0,
+                            horizontalMargin: 12.0,
+                            columns: [
+                              DataColumn(
+                                label: Text('               '),
+                              ),
+                              DataColumn(
+                                label: Text('     Group Head     '),
+                              ),
+                              DataColumn(
+                                label: Text('     Name     '),
+                              ),
+                              DataColumn(
+                                label: Text('     Sequence     '),
+                              ),
+                              DataColumn(
+                                label: Text('     Length     '),
+                              ),
+                              DataColumn(
+                                label: Text('     Width     '),
+                              ),
+                              DataColumn(
+                                label: Text('      Area     '),
+                              )
+                            ],
+                            rows: _rows),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.green)),
+                          onPressed: () {
+                            setState(() {
+                              _showAddFieldDialog(context);
+                            });
+                            // _addDataRow(_groupHead.text, _area.text, _sequence.text,
+                            //     _length.text, _width.text, _areaC.text);
+                          },
+                          child: TextWidget(
+                              text: 'Add Field',
+                              textcolor: Colors.white,
+                              textsize: 10,
+                              textweight: FontWeight.w500)),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      DataTable(
+                        border: TableBorder.all(color: Colors.black),
+                        headingRowColor:
+                            MaterialStatePropertyAll(Color(0xFF38C0CE)),
+                        columnSpacing: 20.0,
+                        horizontalMargin: 20.0,
+                        columns: [
+                          DataColumn(
+                            label: Text('Type'),
+                          ),
+                          DataColumn(label: Text('Area'))
+                        ],
+                        rows: _selectedCategories.map((category) {
+                          return DataRow(cells: [
+                            DataCell(Text(category['category']!)),
+                            DataCell(Text(category['area']!)),
+                          ]);
+                        }).toList(),
 
-                  //  [
-                  //   DataRow(cells: [
-                  //     DataCell(Text('Balacony')),
-                  //     DataCell(Text('')),
-                  //   ]),
-                  //   DataRow(cells: [
-                  //     DataCell(Text('Carpet Area')),
-                  //     DataCell(Text('0.0')),
-                  //   ]),
-                  //   DataRow(cells: [
-                  //     DataCell(Text('Other Area')),
-                  //     DataCell(Text('0.0')),
-                  //   ]),
-                  //   DataRow(cells: [
-                  //     DataCell(Text('Refuge Area')),
-                  //     DataCell(Text(
-                  //       _area.text,
-                  //     )),
-                  //   ]),
-                  //   DataRow(cells: [
-                  //     DataCell(Text('Terrace Area')),
-                  //     DataCell(Text('0.0')),
-                  //   ])
-                  // ]
-                )
-              ],
-            ),
-          ),
-        ),
+                        //  [
+                        //   DataRow(cells: [
+                        //     DataCell(Text('Balacony')),
+                        //     DataCell(Text('')),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text('Carpet Area')),
+                        //     DataCell(Text('0.0')),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text('Other Area')),
+                        //     DataCell(Text('0.0')),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text('Refuge Area')),
+                        //     DataCell(Text(
+                        //       _area.text,
+                        //     )),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text('Terrace Area')),
+                        //     DataCell(Text('0.0')),
+                        //   ])
+                        // ]
+                      )
+                    ],
+                  ),
+                ),
+              ),
         bottomNavigationBar: GestureDetector(
           child: Container(
             alignment: Alignment.center,
@@ -279,7 +369,39 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
-          onTap: () {},
+          onTap: () {
+            // final SharedPreferences prefs =
+            //     await SharedPreferences.getInstance();
+            // print('2');
+
+            // final String? id = prefs.getString("id");
+            // print("id is:$id");
+            // print('1');
+            // updateLiveVisit();
+
+            // // if (id != null) {
+            // //   List<Map<String, dynamic>> mmsheet = [
+            // //     {
+            // //       "rows": [
+            // //         {
+            // //           "grouphead": _groupHead.text,
+            // //           "name": _area.text,
+            // //           "sequence": _sequence.text,
+            // //           "length": _length.text,
+            // //           "width": _width.text,
+            // //           "area": _areaC.text,
+            // //         },
+            // //       ],
+            // //       "mmsheetType": selectedOption,
+            // //       "BalconyTotal": "",
+            // //       "CarpetAreaTotal": "",
+            // //       "OtherAreaTotal": "",
+            // //       "RefugeAreaTotal": "",
+            // //       "TerraceAreaTotal": "",
+            // //     }
+            // //   ];
+            // // }
+          },
         ));
   }
 
@@ -426,6 +548,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                                   height: MediaQuery.sizeOf(context).height,
                                   width: MediaQuery.sizeOf(context).width),
                               searchFieldProps: TextFieldProps(
+                                cursorColor: Color(0xFF38C0CE),
                                 controller: _area,
                                 decoration: InputDecoration(
                                   prefixIconColor:
@@ -605,13 +728,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
         DataCell(Text(width)),
         DataCell(Text(areaC)),
       ]));
-      // Reset text controllers
-      _groupHead.text = '';
-      _area.text = '';
-      _sequence.text = '';
-      _length.text = '';
-      _width.text = '';
-      _areaC.text = '';
+
       // Check if the category is already in the list
       var existingCategoryIndex = _selectedCategories.indexWhere(
         (category) => category['category'] == groupHead,
@@ -633,7 +750,34 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
 
   void _removeDataRow() {
     setState(() {
-      _rows.removeLast();
+      if (_rows.isNotEmpty) {
+        DataRow lastRow = _rows.last;
+
+        // Get the group head and areaC from the last row
+        String groupHead = lastRow.cells[1].child.runtimeType == Text
+            ? (lastRow.cells[1].child as Text).data!
+            : '';
+        String areaC = lastRow.cells[6].child.runtimeType == Text
+            ? (lastRow.cells[6].child as Text).data!
+            : '0.0';
+
+        // Remove the last row
+        _rows.removeLast();
+
+        // Find the corresponding category in _selectedCategories
+        var existingCategoryIndex = _selectedCategories.indexWhere(
+          (category) => category['category'] == groupHead,
+        );
+
+        // If the category exists, update its area by subtracting the deleted value
+        if (existingCategoryIndex != -1) {
+          double currentArea = double.parse(
+              _selectedCategories[existingCategoryIndex]['area'] ?? '0.0');
+          double deletedArea = double.parse(areaC);
+          _selectedCategories[existingCategoryIndex]['area'] =
+              (currentArea - deletedArea).toString();
+        }
+      }
     });
   }
 }

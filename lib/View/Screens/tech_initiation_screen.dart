@@ -9,7 +9,6 @@ import 'package:property_valuation/View/Screens/images_screen.dart';
 import 'package:property_valuation/View/Screens/mm_sheets_screen.dart';
 import 'package:property_valuation/View/Screens/physical_inspection1_screen1.dart';
 import 'package:property_valuation/View/Screens/physical_inspection2_screen2.dart';
-import 'package:property_valuation/View/custom_widgets/custom_dropdown_search.dart';
 import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/popup_menu.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
@@ -104,7 +103,10 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
         _id = enginerVisitCaseData.data.dataarray[0].id;
+
         print('_id===>$_id');
+        await _sharedPreferencesHelper.saveid(_id);
+
         return enginerVisitCaseData.data.dataarray[0].id;
       } else {
         print(
