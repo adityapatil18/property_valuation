@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart';
 import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
+import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
@@ -114,9 +115,9 @@ class _PhyscialInspection1Screen1State
   ];
   List<String>? filteredOptions;
   bool isEditable = false;
+  bool _isLoading = true;
 
   TextEditingController _infrastructureController = TextEditingController();
-  TextEditingController _ratingController = TextEditingController();
   TextEditingController _distanceFromLandmarkRailwayController =
       TextEditingController();
   TextEditingController _neighbourhoodTypeController = TextEditingController();
@@ -129,7 +130,9 @@ class _PhyscialInspection1Screen1State
   TextEditingController _bustopNameController = TextEditingController();
   TextEditingController _marketablityController = TextEditingController();
   TextEditingController _rentController = TextEditingController();
+
   TextEditingController _ZoneDpController = TextEditingController();
+  TextEditingController _policeStationController = TextEditingController();
   TextEditingController _boundiresMatchingController = TextEditingController();
   TextEditingController _sitePersonNameController = TextEditingController();
   TextEditingController _societyNameController = TextEditingController();
@@ -141,6 +144,9 @@ class _PhyscialInspection1Screen1State
   TextEditingController _occupiedSinceController = TextEditingController();
   TextEditingController _nameofReportedOwnerController =
       TextEditingController();
+  TextEditingController _compoundWallandGatesController =
+      TextEditingController();
+  TextEditingController _occupancyOfBuildingContoller = TextEditingController();
 
   Future<void> updateLiveVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -151,7 +157,57 @@ class _PhyscialInspection1Screen1State
 
     try {
       Map<String, dynamic> requestBody = {
-        "DistancefromLandmark": _distanceFromLandmarkRailwayController.text,
+        "id": id,
+        "PhysicalInI": [
+          {
+            "Infrastructure": _infrastructureController.text,
+            "DistancefromLandmark": _distanceFromLandmarkRailwayController.text,
+            "DistanceFromBank": _distnacefrombank.text,
+            "NameofNearestHospital": _nearestHospitalController.text,
+            "Conditionandwidthofapproachroad": "",
+            "NameofNearestBusStop": _bustopNameController.text,
+            "BOUNDARIES_AS_PER_SITE1": "",
+            "BOUNDARIES_AS_PER_DEED1": "",
+            "DIMENSION_AS_PER_SITE1": "",
+            "DIMENSION_AS_PER_DEED1": "",
+            "MOS_AS_PER_SITE1": "",
+            "MOS_AS_PER_DEED1": "",
+            "BOUNDARIES_AS_PER_SITE2": "",
+            "BOUNDARIES_AS_PER_DEED2": "",
+            "DIMENSION_AS_PER_SITE2": "",
+            "DIMENSION_AS_PER_DEED2": "",
+            "MOS_AS_PER_SITE2": "",
+            "MOS_AS_PER_DEED2": "",
+            "BOUNDARIES_AS_PER_SITE3": "",
+            "BOUNDARIES_AS_PER_DEED3": "",
+            "DIMENSION_AS_PER_SITE3": "",
+            "DIMENSION_AS_PER_DEED3": "",
+            "MOS_AS_PER_SITE3": "",
+            "MOS_AS_PER_DEED3": "",
+            "BOUNDARIES_AS_PER_SITE4": "",
+            "BOUNDARIES_AS_PER_DEED4": "",
+            "DIMENSION_AS_PER_SITE4": "",
+            "DIMENSION_AS_PER_DEED4": "",
+            "MOS_AS_PER_SITE4": "",
+            "MOS_AS_PER_DEED4": "",
+            "NameofPersonMetatSite": _sitePersonNameController.text,
+            "ContactofPersonMetatSite": "",
+            "Nameonsocietyboard": _societyNameController.text,
+            "NameofOccupan": _occupantNameController.text,
+            "OccupiedSince": _occupiedSinceController.text,
+            "NameofReportedOwnerasperSiteInformation":
+                _nameofReportedOwnerController.text,
+            "LandHolding": "",
+            "NeighbourhoodGroup": _neighbourhoodTypeController.text,
+            "Marketability": _marketablityController.text,
+            "Property": _propertyOccupiedORVaccantController.text,
+            "Boundaries": _boundiresMatchingController.text,
+            "Relationship": _occupantRelationshipController.text,
+            "LocalityConnectivity": _localityRatingController.text,
+            "Proximity": _proximityController.text,
+            "ZoneAsperCity": _ZoneDpController.text
+          }
+        ]
       };
 
       String phsicaljson = jsonEncode(requestBody);
@@ -160,7 +216,8 @@ class _PhyscialInspection1Screen1State
       Response response = await put(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
-          body: {"id": id, "PhysicalInI": phsicaljson});
+          headers: {"Content-Type": "application/json"},
+          body: phsicaljson);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         print("API response: ${response.body}");
@@ -174,6 +231,25 @@ class _PhyscialInspection1Screen1State
     } catch (e) {
       print("Error during PUT request: $e");
     }
+  }
+
+  Future<void> loadData() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateLiveVisit();
+    // Call loadData when the state is initialized
+
+    loadData();
   }
 
   @override
@@ -255,531 +331,594 @@ class _PhyscialInspection1Screen1State
           })
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const TextWidget(
-                text: "DETAIL OF PROPERTY LOCATION",
-                textcolor: Colors.black,
-                textsize: 18,
-                textweight: FontWeight.w700,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              const CustomRichText(
-                mainText: 'Infrastructure of surrounding area',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                controller: _infrastructureController,
-                items: infrastructueOptions,
-                selectedItem: selectedInfrastruture,
-                onChanged: (value) {
-                  selectedInfrastruture = value!;
-                },
-              ),
-              // DropdownSearch(
-              //   popupProps: PopupProps.menu(
-              //     searchDelay: Duration(microseconds: 1),
-              //     constraints: BoxConstraints.expand(
-              //         height: MediaQuery.sizeOf(context).height,
-              //         width: MediaQuery.sizeOf(context).width),
-              //     searchFieldProps: TextFieldProps(
-              //       cursorColor: Color(0xFF38C0CE),
-              //       decoration: InputDecoration(
-              //         prefixIconColor: MaterialStateColor.resolveWith(
-              //             (states) => states.contains(MaterialState.focused)
-              //                 ? Color(0xFF38C0CE)
-              //                 : Colors.black),
-              //         prefixIcon: Icon(
-              //           Icons.search,
-              //         ),
-              //         focusedBorder: UnderlineInputBorder(
-              //           borderSide:
-              //               BorderSide(color: Color(0xFF38C0CE), width: 2),
-              //         ),
-              //       ),
-              //     ),
-              //     fit: FlexFit.loose,
-              //     showSearchBox: true,
-              //   ),
-              //   items: infrastructueOptions,
-              //   selectedItem: selectedOption,
-              //   enabled: true,
-              //   onChanged: (value) {
-              //     selectedOption = value;
-              //   },
-              // ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Distance from Landmark/Railway Station',
-                isRequired: true,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                  controller: _distanceFromLandmarkRailwayController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  }),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Neighbourhood Type',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                controller: _neighbourhoodTypeController,
-                items: neighborhoodTypeoptionss,
-                selectedItem: selctedNeighbour,
-                onChanged: (value) {
-                  selctedNeighbour = value!;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Distance from Bank/FI Branch',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _distnacefrombank,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: "Locality Connectivity from CBD",
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                controller: _localityRatingController,
-                items: infrastructueOptions,
-                selectedItem: selectedlocality,
-                onChanged: (value) {
-                  selectedlocality = value!;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Proximity to Amentites eg School,Mall etc',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: infrastructueOptions,
-                  selectedItem: selectedproximity,
-                  onChanged: (value) {
-                    selectedproximity = value!;
-                  },
-                  controller: _proximityController),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of nearest hospital',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _nearestHospitalController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Condition and width of approch road',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _roadConditionController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of nearest bus stop',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _bustopNameController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Marketability',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: infrastructueOptions,
-                  selectedItem: selctedZone,
-                  onChanged: (value) {
-                    selctedZone = value!;
-                  },
-                  controller: _ZoneDpController),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Rent',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _rentController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Zone as per city master Plan(DP)',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: zones,
-                  selectedItem: selctedZone,
-                  onChanged: (value) {
-                    selctedZone = value!;
-                  },
-                  controller: _ZoneDpController),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of Police Station',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _rentController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Boundires Matching',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: boundiresMatching,
-                  selectedItem: selctedBoundries,
-                  onChanged: (value) {
-                    selctedBoundries = value!;
-                  },
-                  controller: _boundiresMatchingController),
-              SizedBox(
-                height: 10,
-              ),
-              Divider(
-                thickness: 1,
-                color: Color(0xFF38C0CE),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextWidget(
-                  text: 'BUILDING/PLOT BOUNDRIES AND DIMENSIONS',
-                  textcolor: Colors.black,
-                  textsize: 16,
-                  textweight: FontWeight.w500),
-              SizedBox(
-                height: 20,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  border: TableBorder.all(color: Colors.black),
-                  headingRowColor: MaterialStatePropertyAll(Color(0xFF38C0CE)),
-                  columnSpacing: 16.0,
-                  horizontalMargin: 12.0,
-                  columns: [
-                    DataColumn(label: Text('Direction')),
-                    DataColumn(label: Text('Boundaries (as per site)')),
-                    DataColumn(label: Text('Boundaries (as per deed)')),
-                    DataColumn(label: Text('Dimension (as per site)')),
-                    DataColumn(label: Text('Dimension (as per deed)')),
-                    DataColumn(label: Text('MOS (as per site)')),
-                    DataColumn(label: Text('MOS (as per deed)')),
-                  ],
-                  rows: [
-                    // Data rows
-                    DataRow(cells: [
-                      DataCell(
-                        TextWidget(
-                          text: 'East',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500,
-                        ),
+      body: _isLoading
+          ? Center(child: LoadingIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TextWidget(
+                      text: "DETAIL OF PROPERTY LOCATION",
+                      textcolor: Colors.black,
+                      textsize: 18,
+                      textweight: FontWeight.w700,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    const CustomRichText(
+                      mainText: 'Infrastructure of surrounding area',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                      controller: _infrastructureController,
+                      items: infrastructueOptions,
+                      selectedItem: selectedInfrastruture,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedInfrastruture = value!;
+                          _infrastructureController.text = value;
+                          print(
+                              "Controller Value for : ${_infrastructureController.text}");
+                        });
+                      },
+                    ),
+                    // DropdownSearch(
+                    //   popupProps: PopupProps.menu(
+                    //     searchDelay: Duration(microseconds: 1),
+                    //     constraints: BoxConstraints.expand(
+                    //         height: MediaQuery.sizeOf(context).height,
+                    //         width: MediaQuery.sizeOf(context).width),
+                    //     searchFieldProps: TextFieldProps(
+                    //       cursorColor: Color(0xFF38C0CE),
+                    //       decoration: InputDecoration(
+                    //         prefixIconColor: MaterialStateColor.resolveWith(
+                    //             (states) => states.contains(MaterialState.focused)
+                    //                 ? Color(0xFF38C0CE)
+                    //                 : Colors.black),
+                    //         prefixIcon: Icon(
+                    //           Icons.search,
+                    //         ),
+                    //         focusedBorder: UnderlineInputBorder(
+                    //           borderSide:
+                    //               BorderSide(color: Color(0xFF38C0CE), width: 2),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     fit: FlexFit.loose,
+                    //     showSearchBox: true,
+                    //   ),
+                    //   items: infrastructueOptions,
+                    //   selectedItem: selectedOption,
+                    //   enabled: true,
+                    //   onChanged: (value) {
+                    //     selectedOption = value;
+                    //   },
+                    // ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Distance from Landmark/Railway Station',
+                      isRequired: true,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                        controller: _distanceFromLandmarkRailwayController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        }),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Neighbourhood Type',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                      controller: _neighbourhoodTypeController,
+                      items: neighborhoodTypeoptionss,
+                      selectedItem: selctedNeighbour,
+                      onChanged: (value) {
+                        setState(() {
+                          selctedNeighbour = value!;
+                          _neighbourhoodTypeController.text = value;
+                          print("ss:${_neighbourhoodTypeController.text}");
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Distance from Bank/FI Branch',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _distnacefrombank,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: "Locality Connectivity from CBD",
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                      controller: _localityRatingController,
+                      items: infrastructueOptions,
+                      selectedItem: selectedlocality,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedlocality = value!;
+                          _localityRatingController.text = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Proximity to Amentites eg School,Mall etc',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: infrastructueOptions,
+                        selectedItem: selectedproximity,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedproximity = value!;
+                            _proximityController.text = value;
+                          });
+                        },
+                        controller: _proximityController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of nearest hospital',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _nearestHospitalController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Condition and width of approch road',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _roadConditionController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of nearest bus stop',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _bustopNameController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Marketability',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: infrastructueOptions,
+                        selectedItem: selctedMarketability,
+                        onChanged: (value) {
+                          setState(() {
+                            selctedMarketability = value!;
+                            _marketablityController.text = value;
+                          });
+                        },
+                        controller: _marketablityController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Rent',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _rentController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Zone as per city master Plan(DP)',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: zones,
+                        selectedItem: selctedZone,
+                        onChanged: (value) {
+                          setState(() {
+                            selctedZone = value!;
+                            _ZoneDpController.text = value;
+                          });
+                        },
+                        controller: _ZoneDpController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of Police Station',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _policeStationController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Boundires Matching',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: boundiresMatching,
+                        selectedItem: selctedBoundries,
+                        onChanged: (value) {
+                          setState(() {
+                            selctedBoundries = value!;
+                            _boundiresMatchingController.text = value;
+                            print("${selctedBoundries.toString()}");
+                            print(
+                                "Controller Value for Property Occupied: ${_boundiresMatchingController.text}");
+                          });
+                        },
+                        controller: _boundiresMatchingController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Color(0xFF38C0CE),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextWidget(
+                        text: 'BUILDING/PLOT BOUNDRIES AND DIMENSIONS',
+                        textcolor: Colors.black,
+                        textsize: 16,
+                        textweight: FontWeight.w500),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        border: TableBorder.all(color: Colors.black),
+                        headingRowColor:
+                            MaterialStatePropertyAll(Color(0xFF38C0CE)),
+                        columnSpacing: 16.0,
+                        horizontalMargin: 12.0,
+                        columns: [
+                          DataColumn(label: Text('Direction')),
+                          DataColumn(label: Text('Boundaries (as per site)')),
+                          DataColumn(label: Text('Boundaries (as per deed)')),
+                          DataColumn(label: Text('Dimension (as per site)')),
+                          DataColumn(label: Text('Dimension (as per deed)')),
+                          DataColumn(label: Text('MOS (as per site)')),
+                          DataColumn(label: Text('MOS (as per deed)')),
+                        ],
+                        rows: [
+                          // Data rows
+                          DataRow(cells: [
+                            DataCell(
+                              TextWidget(
+                                text: 'East',
+                                textcolor: Colors.black,
+                                textsize: 14,
+                                textweight: FontWeight.w500,
+                              ),
+                            ),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(
+                              TextWidget(
+                                text: 'West',
+                                textcolor: Colors.black,
+                                textsize: 14,
+                                textweight: FontWeight.w500,
+                              ),
+                            ),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(
+                              TextWidget(
+                                text: 'North',
+                                textcolor: Colors.black,
+                                textsize: 14,
+                                textweight: FontWeight.w500,
+                              ),
+                            ),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                          ]),
+                          DataRow(cells: [
+                            DataCell(
+                              TextWidget(
+                                text: 'South',
+                                textcolor: Colors.black,
+                                textsize: 14,
+                                textweight: FontWeight.w500,
+                              ),
+                            ),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                            DataCell(isEditable
+                                ? _buildEditableTextField()
+                                : Text('')),
+                          ]),
+                        ],
                       ),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                    ]),
-                    DataRow(cells: [
-                      DataCell(
-                        TextWidget(
-                          text: 'West',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500,
-                        ),
-                      ),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                    ]),
-                    DataRow(cells: [
-                      DataCell(
-                        TextWidget(
-                          text: 'North',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500,
-                        ),
-                      ),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                    ]),
-                    DataRow(cells: [
-                      DataCell(
-                        TextWidget(
-                          text: 'South',
-                          textcolor: Colors.black,
-                          textsize: 14,
-                          textweight: FontWeight.w500,
-                        ),
-                      ),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                      DataCell(
-                          isEditable ? _buildEditableTextField() : Text('')),
-                    ]),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          isEditable = !isEditable;
+                        });
+                      },
+                      child: Text(isEditable ? 'Done Editing' : 'Add/Edit'),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Color(0xFF38C0CE),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextWidget(
+                        text: 'DETAIL OF CUSTOMER MEETING',
+                        textcolor: Colors.black,
+                        textsize: 18,
+                        textweight: FontWeight.w700),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of person me at site',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _sitePersonNameController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of society board',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _societyNameController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Property occupied/vaccant',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: propertOccupiedOptions,
+                        selectedItem: selectedPropertyOccupied,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPropertyOccupied = value!;
+                            _propertyOccupiedORVaccantController.text = value;
+                            print(
+                                "Controller Value for Property Occupied: ${_propertyOccupiedORVaccantController.text}");
+                          });
+                        },
+                        controller: _propertyOccupiedORVaccantController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Name of occupant',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _occupantNameController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Relationship of occupant with customer',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: occupantRelationOptions,
+                        selectedItem: selectedRelationship,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRelationship = value!;
+                            _occupantRelationshipController.text = value;
+                          });
+                        },
+                        controller: _occupantRelationshipController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Occupied Since',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _occupiedSinceController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText:
+                          'Name of reported owner as per site information',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _nameofReportedOwnerController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Compound wall and gates and security Average',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _compoundWallandGatesController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Occupancy of Building',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _occupancyOfBuildingContoller,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isEditable = !isEditable;
-                  });
-                },
-                child: Text(isEditable ? 'Done Editing' : 'Add/Edit'),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Divider(
-                thickness: 1,
-                color: Color(0xFF38C0CE),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextWidget(
-                  text: 'DETAIL OF CUSTOMER MEETING',
-                  textcolor: Colors.black,
-                  textsize: 18,
-                  textweight: FontWeight.w700),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of person me at site',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _sitePersonNameController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of society board',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _societyNameController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Property occupied/vaccant',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: propertOccupiedOptions,
-                  selectedItem: selectedPropertyOccupied,
-                  onChanged: (value) {
-                    selectedPropertyOccupied = value!;
-                  },
-                  controller: _propertyOccupiedORVaccantController),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of occupant',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _occupantNameController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Relationship of occupant with customer',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: occupantRelationOptions,
-                  selectedItem: selectedRelationship,
-                  onChanged: (value) {
-                    selectedRelationship = value!;
-                  },
-                  controller: _occupantRelationshipController),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Occupied Since',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _occupiedSinceController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Name of reported owner as per site information',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _nameofReportedOwnerController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Compound wall and gates and security Average',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _nameofReportedOwnerController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Occupancy of Building',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _nameofReportedOwnerController,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: GestureDetector(
         child: Container(
           alignment: Alignment.center,

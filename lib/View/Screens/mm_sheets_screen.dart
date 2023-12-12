@@ -50,32 +50,52 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
     print("id is:$id");
 
     try {
+      List<Map<String, dynamic>> rowsData = _rows.map((row) {
+        return {
+          "grouphead": row.cells[1].child is Text
+              ? (row.cells[1].child as Text).data!
+              : '',
+          "name": row.cells[2].child is Text
+              ? (row.cells[2].child as Text).data!
+              : '',
+          "sequence": row.cells[3].child is Text
+              ? (row.cells[3].child as Text).data!
+              : '',
+          "length": row.cells[4].child is Text
+              ? (row.cells[4].child as Text).data!
+              : '',
+          "width": row.cells[5].child is Text
+              ? (row.cells[5].child as Text).data!
+              : '',
+          "area": row.cells[6].child is Text
+              ? (row.cells[6].child as Text).data!
+              : '',
+        };
+      }).toList();
+
       Map<String, dynamic> requestBody = {
-        "rows": _rows.map((row) {
-          return {
-            "grouphead": _groupHead.text,
-            "name": _area.text,
-            "sequence": _sequence.text,
-            "length": _length.text,
-            "width": _width.text,
-            "area": _areaC.text,
-          };
-        }).toList(),
-        "mmsheetType": selectedOption,
-        "BalconyTotal": getCategoryTotalArea('Balcony'),
-        "CarpetAreaTotal": getCategoryTotalArea('Carpet Area'),
-        "OtherAreaTotal": getCategoryTotalArea('Other Area'),
-        "RefugeAreaTotal": getCategoryTotalArea('Refuge Area'),
-        "TerraceAreaTotal": getCategoryTotalArea('Terrace Area'),
+        "id": id,
+        "mmsheet": [
+          {
+            "rows": rowsData,
+            "mmsheetType": selectedOption,
+            "BalconyTotal": getCategoryTotalArea('Balcony'),
+            "CarpetAreaTotal": getCategoryTotalArea('Carpet Area'),
+            "OtherAreaTotal": getCategoryTotalArea('Other Area'),
+            "RefugeAreaTotal": getCategoryTotalArea('Refuge Area'),
+            "TerraceAreaTotal": getCategoryTotalArea('Terrace Area'),
+          }
+        ]
       };
       // Convert the 'mmsheet' parameter to a JSON-encoded string
       String mmsheetJson = jsonEncode(requestBody);
       // requestBody["mmsheet"] = mmsheetJson;
-      print("# $mmsheetJson");
+      print("#s $mmsheetJson");
       Response response = await put(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
-          body: {"id": id, "mmsheet": mmsheetJson});
+          headers: {"Content-Type": "application/json"},
+          body: mmsheetJson);
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -369,38 +389,15 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
-          onTap: () {
-            // final SharedPreferences prefs =
-            //     await SharedPreferences.getInstance();
-            // print('2');
+          onTap: () async {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            print('2');
 
-            // final String? id = prefs.getString("id");
-            // print("id is:$id");
-            // print('1');
-            // updateLiveVisit();
-
-            // // if (id != null) {
-            // //   List<Map<String, dynamic>> mmsheet = [
-            // //     {
-            // //       "rows": [
-            // //         {
-            // //           "grouphead": _groupHead.text,
-            // //           "name": _area.text,
-            // //           "sequence": _sequence.text,
-            // //           "length": _length.text,
-            // //           "width": _width.text,
-            // //           "area": _areaC.text,
-            // //         },
-            // //       ],
-            // //       "mmsheetType": selectedOption,
-            // //       "BalconyTotal": "",
-            // //       "CarpetAreaTotal": "",
-            // //       "OtherAreaTotal": "",
-            // //       "RefugeAreaTotal": "",
-            // //       "TerraceAreaTotal": "",
-            // //     }
-            // //   ];
-            // // }
+            final String? id = prefs.getString("id");
+            print("id is:$id");
+            print('1');
+            updateLiveVisit();
           },
         ));
   }
@@ -569,7 +566,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                               // showSelectedItems: true,
                               showSearchBox: true,
                             ),
-                            selectedItem: selectedOption,
+                            // selectedItem: ,
                             items: _areaOptions,
                             enabled: true,
                             onChanged: (value) {

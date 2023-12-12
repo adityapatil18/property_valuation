@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -25,17 +26,33 @@ class ImagesScreen extends StatefulWidget {
 }
 
 class _ImagesScreenState extends State<ImagesScreen> {
-  // Completer<GoogleMapController> _controller = Completer();
-  // static const LatLng _center = const LatLng(18.5032584, 73.8203143);
-  // void _onMapCreated(GoogleMapController controller) {
-  //   _controller.complete(controller);
-  // }
-  static final LatLng _kMapCenter =
-      LatLng(19.018255973653343, 72.84793849278007);
+  Completer<GoogleMapController> _controller = Completer();
+  // on below line we have specified camera position
+  static final CameraPosition _kGoogle = const CameraPosition(
+    target: LatLng(20.42796133580664, 80.885749655962),
+    zoom: 14.4746,
+  );
 
-  static final CameraPosition _kInitialPosition =
-      CameraPosition(target: _kMapCenter, zoom: 11.0, tilt: 0, bearing: 0);
-  late GoogleMapController _controller;
+  // on below line we have created the list of markers
+  final List<Marker> _markers = <Marker>[
+    Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(20.42796133580664, 75.885749655962),
+        infoWindow: InfoWindow(
+          title: 'My Position',
+        )),
+  ];
+
+// created method for getting user current location
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
+  }
 
   Color containerColor = Colors.red;
   bool showSecondUI = false;
@@ -46,22 +63,6 @@ class _ImagesScreenState extends State<ImagesScreen> {
     super.initState();
     _imagePicker = ImagePicker();
   }
-
-  // Future<void> _getCurrentLocation() async {
-  //   try {
-  //     var userLocation = await location.getLocation();
-  //     mapController.animateCamera(
-  //       CameraUpdate.newCameraPosition(
-  //         CameraPosition(
-  //           target: LatLng(userLocation.latitude!, userLocation.longitude!),
-  //           zoom: 15.0,
-  //         ),
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     print('Error getting location: $e');
-  //   }
-  // }
 
   Future<void> _pickImage() async {
     XFile? pickedImage =
@@ -167,12 +168,15 @@ class _ImagesScreenState extends State<ImagesScreen> {
                 width: MediaQuery.sizeOf(context).width,
                 // color: containerColor,
                 child: GoogleMap(
-                    onMapCreated: (controller) {
-                      setState(() {
-                        _controller = controller;
-                      });
-                    },
-                    initialCameraPosition: _kInitialPosition),
+                  initialCameraPosition: _kGoogle,
+                  markers: Set<Marker>.of(_markers),
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  compassEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
               ),
               SizedBox(
                 height: 10,

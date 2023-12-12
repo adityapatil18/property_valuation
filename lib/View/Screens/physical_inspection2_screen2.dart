@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:property_valuation/View/Screens/images_screen.dart';
+import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
@@ -22,7 +26,231 @@ class PhysicalInspection2Screen2 extends StatefulWidget {
 
 class _PhysicalInspection2Screen2State
     extends State<PhysicalInspection2Screen2> {
-  List<String> physicalstatusOptions = [];
+  List<String> physicalstatusOptions = [
+    "Completed and Occupied",
+    "Completed and Ready for Possession",
+    "Under Construction Work not in Progress",
+    "Under Construction Work in Progress",
+    "Open Plot",
+    "Part Completed and Part work Pending"
+  ];
+  List<String> voilationOptions = [
+    "Not Applicable",
+    "Two or more Individual Units Merged",
+    "Change of Usage ",
+    "Building Line Violation",
+    "Vertical Violation",
+    "FSI Violation",
+    "Tenement Violation",
+    "Approved plans not provided hence cannot comment",
+    "Under Construction Property hence cannot comment",
+    "Change of Permitted Usage",
+    "Residential Property used as Commercial.",
+    "Non FSI Area enclosed in to the Unit",
+    "Construction not as per plan",
+    "Internal Changes done in Unit",
+    "Change in Unit Configuration",
+    "Desktop Valuation done hence not applicable",
+    "Only External Visit done hence cannot comment",
+    "Change of Numbering of unit on floor",
+    "Change of Numbering of Floors ( vertically)",
+    "Horizontal Violation",
+  ];
+  List<String> remarkviewoptions = [
+    "Building View",
+    "Cemetery View",
+    "Main Road View",
+    "Lake View",
+    "Pond View",
+    "River View",
+    "Garden View",
+    "Hill View",
+    "Horizon View",
+    "Nallah View",
+    "Railway Track View",
+    "Sea View",
+    "Swimming Pool View",
+    "View of Religious Structure",
+    "Internal Road View",
+    "Internal Compound View",
+    "Internal Passage View",
+    "Slum View",
+    "Open Plot View",
+    "Creek View",
+  ];
+  List<String> numberOfWings = [
+    "Standalone Structure",
+    "Group Housing Scheme",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "More than 20",
+    "Not Applicable",
+    "Not Available"
+  ];
+  List<String> numberOfLifts = [
+    "Not Available",
+    "Internal Visit not Allowed hence Cannot Comment",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "More Than 9",
+  ];
+  List<String> exteriorOptions = [
+    "Excellent",
+    "Good ",
+    "Average",
+    "Poor",
+    "Under Construction",
+    "Under Renovation/Repairing",
+    "Glass Facade",
+    "Below Average",
+    "NA",
+  ];
+  List<String> interiorOptions = [
+    "Excellent",
+    "Good ",
+    "Average",
+    "Poor",
+    "Needs Maintenance",
+    "Under Construction",
+    "Under Renovation/Repairing",
+    "Bareshell Unit",
+    "Internal Visit not Allowed hence Cannot Comment",
+    "Below Average",
+    "Not Applicable as property is plot",
+  ];
+  List<String> fittingOptions = [
+    "Concealed Plumbing and Concealed Electrical Fittings",
+    "Partly Concealed Plumbing and Partly Concealed Electrical Fittings",
+    "Open Plumbing and Electric Fittings",
+    "Under Construction",
+    "Internal Visit not Allowed hence Cannot Comment",
+    "Under Renovation/Repairing",
+    "Bare shell Unit hence not applicable",
+    "Not Applicable as property is plot",
+    "casing caping",
+    "piping",
+  ];
+  List<String> windowOptions = [
+    "Internal Visit not Allowed hence Cannot Comment",
+    "Aluminium Sliding",
+    "French Window",
+    "Louvered Windows",
+    "Section Window",
+    "Internal Visit not Done hence Cannot Comment",
+    "Windows not applicable",
+    "Under Construction",
+    "MS Openable",
+    "NA",
+    "Aluminium Sliding",
+    "PVC Sliding",
+    "Glass facade",
+    "anodised aluminium sliding",
+    "wooden openable",
+  ];
+  List<String> doorOptions = [
+    "Internal Visit not Allowed hence Cannot Comment",
+    "Glass Door",
+    "Wooden Door",
+    "Flush Door",
+    "Sliding Door",
+    "Collapsible Steel Door",
+    "Rolling Steel Shutter Door",
+    "Internal Visit not Done hence Cannot Comment",
+    "piProperty Under Constructionping",
+    "Safety Door",
+    "Under Construction",
+    "NA",
+    "Not Applicable as property is plot",
+  ];
+
+  List<String> maintainceLevelOptions = [
+    "Excellent",
+    "Good ",
+    "Average",
+    "Below Average",
+    "Poor",
+    "Need Maintenance- Structural Cracks Observed",
+    "Need Maintenance- Plaster Cracks Observed",
+    "Under Construction",
+    "Dilapidated Condition",
+    "Under Renovation",
+    "Open Plot",
+  ];
+  List<String> propertyAccOptions = [
+    "1RK",
+    "1BR",
+    "2BR",
+    "3BR",
+    "4BR",
+    "5BR",
+    "OFF",
+    "PEN",
+    "PLT",
+    "SHP",
+  ];
+  List<String> independantOptions = [
+    "Yes",
+    "No",
+    "Merged",
+    "Internal Visit not Allowed hence Cannot Comment"
+  ];
+  List<String> constructionOptions = [
+    'Yes',
+    'No',
+    "Plan Not Verified",
+    "Plan Not Applicable",
+    "Under Construction hence Cannot Comment",
+  ];
+  List<String> typeEtireBuildOptions = [
+    "Residentail",
+    "Commercial",
+    "Industrial",
+    "Residentail + Commercial"
+  ];
+  List<String> detailCommercialUsageOptions = ["Yes", "No"];
+  String selectedPhysicalStatus = "";
+  // String selectedViolataion = "";
+  String selectedRemarkView = "";
+  String selectednumberOfWings = "";
+  String selcetednumberOfLifts = "";
+  String selectedExterior = "";
+  String selectedInterior = "";
+  String selectedFitting = "";
+  String selectedWindow = "";
+  String selectedDoor = "";
+  String selectedMaintanceLevel = "";
+  String selectedPropertyAcc = "";
+  String selectedIndepent = "";
+  String selectedConstruction = "";
+  String selectedCommercialUsage = "";
+  String selectedEntireBuildType = "";
+  List<String> selectedViolataion = [];
+  List? _myActivities;
+  late String _myActivitiesResult;
   TextEditingController _physicalstatusController = TextEditingController();
   TextEditingController _pecentageController = TextEditingController();
   TextEditingController _propertyType = TextEditingController();
@@ -54,6 +282,7 @@ class _PhysicalInspection2Screen2State
   TextEditingController _souurondedBy = TextEditingController();
   TextEditingController _residualAge = TextEditingController();
   TextEditingController _remark = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,9 +378,16 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _physicalstatusController,
-                  options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: physicalstatusOptions,
+                  selectedItem: selectedPhysicalStatus,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPhysicalStatus = value!;
+                      _physicalstatusController.text = value;
+                    });
+                  },
+                  controller: _physicalstatusController),
               SizedBox(
                 height: 10,
               ),
@@ -189,15 +425,53 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 10,
               ),
-              CustomRichText(
-                mainText: 'Voilation Observed',
-              ),
+              // CustomRichText(
+              //   mainText: 'Voilation Observed',
+              // ),
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _voilationObserved,
-                  options: physicalstatusOptions),
+              // MultiSelectDialogField(
+              //   items:
+              //       ["1", "2", "3"].map((e) => MultiSelectItem(e, e)).toList(),
+              //   title: Text('Selected Options'),
+              //   onConfirm: (value) {
+              //     setState(() {
+              //       selectedViolataion = value;
+              //     });
+              //   },
+              // ),
+              MultiSelectFormField(
+                chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+                dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                dialogShapeBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                title: Text('Vivolation Observed'),
+                dataSource: [
+                  {"display": "Not Applicable", "value": "Not Applicable"},
+                  {
+                    "display": "Climbing",
+                    "value": "Climbing",
+                  },
+                  {
+                    "display": "Walking",
+                    "value": "Walking",
+                  },
+                ],
+                textField: 'display',
+                valueField: 'value',
+                okButtonLabel: 'OK',
+                cancelButtonLabel: 'CANCEL',
+                initialValue: _myActivities,
+                onSaved: (value) {
+                  if (value == null) return;
+                  setState(() {
+                    _myActivities = value;
+                  });
+                },
+              ),
+              SizedBox(height: 16),
+              // Text('Selected Options: ${selectedViolataion.join(', ')}'),
               SizedBox(
                 height: 10,
               ),
@@ -217,9 +491,16 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _remarkviewProperty,
-                  options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: remarkviewoptions,
+                  selectedItem: selectedRemarkView,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedRemarkView = value!;
+                      _remarkviewProperty.text = value;
+                    });
+                  },
+                  controller: _remarkviewProperty),
               SizedBox(
                 height: 10,
               ),
@@ -261,8 +542,16 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _wingsINSoceiety, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: numberOfWings,
+                  selectedItem: selectednumberOfWings,
+                  onChanged: (value) {
+                    setState(() {
+                      selectednumberOfWings = value!;
+                      _wingsINSoceiety.text = value;
+                    });
+                  },
+                  controller: _wingsINSoceiety),
               SizedBox(
                 height: 10,
               ),
@@ -294,8 +583,16 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _numberofLifts, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: numberOfLifts,
+                  selectedItem: selcetednumberOfLifts,
+                  onChanged: (value) {
+                    setState(() {
+                      selcetednumberOfLifts = value!;
+                      _numberofLifts.text = value;
+                    });
+                  },
+                  controller: _numberofLifts),
               SizedBox(
                 height: 10,
               ),
@@ -305,8 +602,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _exterior, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: exteriorOptions,
+                  selectedItem: selectedExterior,
+                  onChanged: (value) {
+                    selectedExterior = value!;
+                    _exterior.text = value;
+                  },
+                  controller: _exterior),
               SizedBox(
                 height: 10,
               ),
@@ -316,8 +619,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _interior, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: interiorOptions,
+                  selectedItem: selectedInterior,
+                  onChanged: (value) {
+                    selectedInterior = value!;
+                    _interior.text = value;
+                  },
+                  controller: _interior),
               SizedBox(
                 height: 10,
               ),
@@ -327,8 +636,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _fitting, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: fittingOptions,
+                  selectedItem: selectedFitting,
+                  onChanged: (value) {
+                    selectedFitting = value!;
+                    _fitting.text = value;
+                  },
+                  controller: _fitting),
               SizedBox(
                 height: 10,
               ),
@@ -349,8 +664,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _window, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: windowOptions,
+                  selectedItem: selectedWindow,
+                  onChanged: (value) {
+                    selectedWindow = value!;
+                    _window.text = value;
+                  },
+                  controller: _window),
               SizedBox(
                 height: 10,
               ),
@@ -360,8 +681,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _door, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: doorOptions,
+                  selectedItem: selectedDoor,
+                  onChanged: (value) {
+                    selectedDoor = value!;
+                    _door.text = value;
+                  },
+                  controller: _door),
               SizedBox(
                 height: 10,
               ),
@@ -381,8 +708,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _maintainceLevel, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: maintainceLevelOptions,
+                  selectedItem: selectedMaintanceLevel,
+                  onChanged: (value) {
+                    selectedMaintanceLevel = value!;
+                    _maintainceLevel.text = value;
+                  },
+                  controller: _maintainceLevel),
               SizedBox(
                 height: 10,
               ),
@@ -392,8 +725,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _popertyACCValue, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: propertyAccOptions,
+                  selectedItem: selectedPropertyAcc,
+                  onChanged: (value) {
+                    selectedPropertyAcc = value!;
+                    _popertyACCValue.text = value;
+                  },
+                  controller: _popertyACCValue),
               SizedBox(
                 height: 10,
               ),
@@ -404,9 +743,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _independentacess,
-                  options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: independantOptions,
+                  selectedItem: selectedIndepent,
+                  onChanged: (value) {
+                    selectedIndepent = value!;
+                    _independentacess.text = value;
+                  },
+                  controller: _independentacess),
               SizedBox(
                 height: 10,
               ),
@@ -416,9 +760,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _selctConstructionPlan,
-                  options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: constructionOptions,
+                  selectedItem: selectedConstruction,
+                  onChanged: (value) {
+                    selectedConstruction = value!;
+                    _selctConstructionPlan.text = value;
+                  },
+                  controller: _selctConstructionPlan),
               SizedBox(
                 height: 10,
               ),
@@ -428,9 +777,14 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _commercialUsageDetails,
-                  options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: detailCommercialUsageOptions,
+                  selectedItem: selectedCommercialUsage,
+                  onChanged: (value) {
+                    selectedCommercialUsage = value!;
+                    _commercialUsageDetails.text = value;
+                  },
+                  controller: _commercialUsageDetails),
               SizedBox(
                 height: 10,
               ),
@@ -440,8 +794,16 @@ class _PhysicalInspection2Screen2State
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _entireBldgType, options: physicalstatusOptions),
+              CustomDropdownSearch(
+                  items: typeEtireBuildOptions,
+                  selectedItem: selectedEntireBuildType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedEntireBuildType = value!;
+                      _entireBldgType.text = value;
+                    });
+                  },
+                  controller: _entireBldgType),
               SizedBox(
                 height: 10,
               ),
