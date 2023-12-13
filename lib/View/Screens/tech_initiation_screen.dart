@@ -76,6 +76,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
         if (_id != null) {
           await liveVisitbyId(_id);
+          print("live vist $_id");
 
           // Update UI or perform any other actions based on 'liveVisitbyId' data
           setState(() {
@@ -103,7 +104,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
         _id = enginerVisitCaseData.data.dataarray[0].id;
-
+        // print("api respnse for responsedata::${responseData}");
         print('_id===>$_id');
         await _sharedPreferencesHelper.saveid(_id);
 
@@ -121,6 +122,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   }
 
   Future<void> liveVisitbyId(String _id) async {
+    print("Debug: liveVisitbyId - _id: $_id"); // Add this debug print
+
     try {
       Response response = await get(Uri.parse(
           'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$_id'));
@@ -129,6 +132,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
           final jsonData = jsonDecode(response.body);
           final liveVisitData = LiveVisitData.fromJson(jsonData);
           print('liveVisitbyId data response: $jsonData');
+          print("livevistsidat::$liveVisitData");
           _instituteType.text = liveVisitData.data.institutionType;
           _instituteName.text = liveVisitData.data.maininstitutionname;
           __insituteBranch.text = liveVisitData.data.manageInstitutename;
@@ -147,9 +151,12 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
           print(_instituteType.text);
         });
+      } else {
+        print(
+            "Failed to fetch liveVisitbyId. Status code: ${response.statusCode}");
       }
     } catch (e) {
-      print('Error : $e');
+      print('Errors : $e');
     }
   }
 
@@ -181,7 +188,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        print("API response: $responseData");
+        // print("API response: $responseData");
 
         // Check the response and handle accordingly
         if (responseData['status'] == 'LiveVisit updated Successfully') {
@@ -209,14 +216,14 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        print("loaction api response:$responseData");
+        // print("loaction api response:$responseData");
         // final locationPopUpList = LocationPopUpList.fromJson(responseData);
         // List<String> options =
         //     locationPopUpList.data.map((datum) => datum.name).toList();
         LocationPopUpList locationPopUpList =
             LocationPopUpList.fromJson(responseData);
         List<LocationListData> options = locationPopUpList.data;
-        print('list of options:$options');
+        // print('list of options:$options');
         return options;
       } else {
         print(
@@ -240,8 +247,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         LoanType loanType = LoanType.fromJson(responseData);
-        print('loan api response:$responseData');
-        print("loan type:$loanType");
+        // print('loan api response:$responseData');
+        // print("loan type:$loanType");
       } else {
         print(
             'Failed to fetch loan type details. Status code: ${response.statusCode}');

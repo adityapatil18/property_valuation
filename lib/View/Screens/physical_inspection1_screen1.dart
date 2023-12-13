@@ -9,6 +9,7 @@ import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
+import 'package:property_valuation/constant/list_of_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../custom_widgets/popup_menu.dart';
@@ -30,14 +31,12 @@ class PhyscialInspection1Screen1 extends StatefulWidget {
 
 class _PhyscialInspection1Screen1State
     extends State<PhyscialInspection1Screen1> {
-  List<String> infrastructueOptions = [
-    'good',
-    'bad',
-    'excellent',
-    'super',
-    'great'
-  ];
-  bool _validate = false;
+  List<String> infrastructueOption = infrastructueOptions;
+  List<String> neighborhoodTypeoption = neighborhoodTypeoptionss;
+  List<String> zoneoption = zoneoptions;
+  List<String> boundiresMatchingoption = boundiresMatchingoptions;
+  List<String> propertOccupiedOption = propertOccupiedOptions;
+  List<String> occupantRelationOption = occupantRelationOptions;
   String selectedInfrastruture = "";
   String selctedNeighbour = "";
   String selectedlocality = "";
@@ -47,72 +46,7 @@ class _PhyscialInspection1Screen1State
   String selctedBoundries = "";
   String selectedRelationship = "";
   String selectedPropertyOccupied = "";
-  List<String> neighborhoodTypeoptionss = [
-    "Aristrocrat",
-    "Prime Residentaial",
-    "Prime Commercial",
-    "Prime Industrial",
-    "Good Residential",
-    "Good Commercial",
-    "Good Industrial",
-    "Average Residential",
-    "Average Commercial",
-    "Average Industrial",
-    "Red Light Area",
-    "Surrounded by Chawl",
-    "Below Average Residential",
-    "Below Average Commercial",
-    "Below Average Industrial",
-    "Industrial Commercial"
-  ];
-  List<String> zones = [
-    'Zone Certificate not provided',
-    'Agricultural Zone',
-    'No Development Zone',
-    'Commercial Zone',
-    'Industrail Zone',
-    'Green Zone',
-    'Residential Zone',
-    'High Density Zone',
-    'Low Density Zone',
-    'Urbanisable Zone',
-    'Institutional Zone',
-    'CRZ',
-    'Other Reservation'
-  ];
-  List<String> boundiresMatching = [
-    'Yes',
-    'No',
-    'Partly Matching',
-    'Documnet Not Provided',
-    'Details not mentioned in Documnet'
-  ];
-  List<String> propertOccupiedOptions = [
-    'Occupied',
-    'Partly Self Occupied-Partly Vacant',
-    'Partly Self Occupied-Partly Occupied by Tenant',
-    'Partly Tenant Occupied-Partly Vacant',
-    'Tenat Occupied',
-    'Under Construction',
-    'Renovation/Interior work in Progress',
-    'Occasionally Occupied by Applicant',
-    'Occasionally Occupied by Seller',
-    'Internal Visit Not Done',
-    'Internal Visit Not Allowed',
-    'Please Refer Remarks',
-    'Vacant',
-    'Self Occuied'
-  ];
-  List<String> occupantRelationOptions = [
-    'Tenant',
-    'Seller',
-    'Self',
-    'Vacant',
-    'Under Construction',
-    'External Visit Done hence cannot Comment',
-    'Part self and part tenant',
-    'NA'
-  ];
+
   List<String>? filteredOptions;
   bool isEditable = false;
   bool _isLoading = true;
@@ -367,38 +301,6 @@ class _PhyscialInspection1Screen1State
                         });
                       },
                     ),
-                    // DropdownSearch(
-                    //   popupProps: PopupProps.menu(
-                    //     searchDelay: Duration(microseconds: 1),
-                    //     constraints: BoxConstraints.expand(
-                    //         height: MediaQuery.sizeOf(context).height,
-                    //         width: MediaQuery.sizeOf(context).width),
-                    //     searchFieldProps: TextFieldProps(
-                    //       cursorColor: Color(0xFF38C0CE),
-                    //       decoration: InputDecoration(
-                    //         prefixIconColor: MaterialStateColor.resolveWith(
-                    //             (states) => states.contains(MaterialState.focused)
-                    //                 ? Color(0xFF38C0CE)
-                    //                 : Colors.black),
-                    //         prefixIcon: Icon(
-                    //           Icons.search,
-                    //         ),
-                    //         focusedBorder: UnderlineInputBorder(
-                    //           borderSide:
-                    //               BorderSide(color: Color(0xFF38C0CE), width: 2),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     fit: FlexFit.loose,
-                    //     showSearchBox: true,
-                    //   ),
-                    //   items: infrastructueOptions,
-                    //   selectedItem: selectedOption,
-                    //   enabled: true,
-                    //   onChanged: (value) {
-                    //     selectedOption = value;
-                    //   },
-                    // ),
                     SizedBox(
                       height: 10,
                     ),
@@ -566,7 +468,7 @@ class _PhyscialInspection1Screen1State
                       height: 5,
                     ),
                     CustomDropdownSearch(
-                        items: zones,
+                        items: zoneoption,
                         selectedItem: selctedZone,
                         onChanged: (value) {
                           setState(() {
@@ -597,7 +499,7 @@ class _PhyscialInspection1Screen1State
                       height: 5,
                     ),
                     CustomDropdownSearch(
-                        items: boundiresMatching,
+                        items: boundiresMatchingoptions,
                         selectedItem: selctedBoundries,
                         onChanged: (value) {
                           setState(() {
@@ -765,12 +667,17 @@ class _PhyscialInspection1Screen1State
                       height: 10,
                     ),
                     ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.green)),
                       onPressed: () {
                         setState(() {
                           isEditable = !isEditable;
                         });
                       },
-                      child: Text(isEditable ? 'Done Editing' : 'Add/Edit'),
+                      child: Text(
+                          style: TextStyle(color: Colors.white),
+                          isEditable ? 'Done Editing' : 'Add/Edit'),
                     ),
                     SizedBox(
                       height: 20,

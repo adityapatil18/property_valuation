@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 import 'package:property_valuation/View/Screens/tech_initiation_screen.dart';
 import 'package:property_valuation/View/custom_widgets/custom_circle_container.dart';
+import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
 import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/my_drawer.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
+import 'package:property_valuation/constant/list_of_options.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/shared_functions.dart';
 import '../../model/enginer_visit_case_model.dart';
@@ -31,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? dateOfReschedule;
   String specialInstruction = "";
   bool _isLoading = true;
-
+  List<String> statusOption = statusOptions;
+  String selectedCaseStatus = "";
+  TextEditingController _caseStaus = TextEditingController();
   Future<void> fetchData() async {
     try {
       // Retrieve the token from shared preferences
@@ -411,46 +417,64 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 30,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: TextWidget(
-                                        text: 'Case Status Update',
-                                        textcolor: Colors.white,
-                                        textsize: 12,
-                                        textweight: FontWeight.w800),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
+                                  GestureDetector(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange,
                                         borderRadius: BorderRadius.circular(5),
-                                        color: Colors.purple),
-                                    child: TextWidget(
-                                        text: 'Schedule',
-                                        textcolor: Colors.white,
-                                        textsize: 12,
-                                        textweight: FontWeight.w800),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 82, 187, 86),
-                                      borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: TextWidget(
+                                          text: 'Case Status Update',
+                                          textcolor: Colors.white,
+                                          textsize: 12,
+                                          textweight: FontWeight.w800),
                                     ),
-                                    child: TextWidget(
-                                        text: 'Call',
-                                        textcolor: Colors.white,
-                                        textsize: 12,
-                                        textweight: FontWeight.w800),
+                                    onTap: () {
+                                      setState(() {
+                                        showUpdateCaseStatus(context);
+                                      });
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.purple),
+                                      child: TextWidget(
+                                          text: 'Schedule',
+                                          textcolor: Colors.white,
+                                          textsize: 12,
+                                          textweight: FontWeight.w800),
+                                    ),
+                                    onTap: () {
+                                      showschedule(context);
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(255, 82, 187, 86),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: TextWidget(
+                                          text: 'Call',
+                                          textcolor: Colors.white,
+                                          textsize: 12,
+                                          textweight: FontWeight.w800),
+                                    ),
+                                    onTap: () {
+                                      _makingPhoneCall();
+                                    },
                                   ),
                                 ],
                               )
@@ -462,5 +486,256 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ));
+  }
+
+  _makingPhoneCall() async {
+    var url = Uri.parse("tel:9776765434");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void showUpdateCaseStatus(BuildContext context) {
+    String selectedDateTime = ""; // Variable to store selected date and time
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: TextWidget(
+              text: "Update Case Status",
+              textcolor: Colors.black,
+              textsize: 20,
+              textweight: FontWeight.w500),
+          actions: [
+            CustomDropdownSearch(
+                items: statusOption,
+                selectedItem: selectedCaseStatus,
+                onChanged: (value) {
+                  setState(() {
+                    selectedCaseStatus = value!;
+                    _caseStaus.text = value;
+                  });
+                  // Fetch the dynamic date and time based on the selected item
+                  setState(() {
+                    fetchDynamicDateTime(value!).then((dynamicDateTime) {
+                      setState(() {
+                        selectedDateTime = dynamicDateTime;
+                      });
+                    });
+                  });
+                },
+                controller: _caseStaus),
+            TextField(
+                controller: TextEditingController(text: selectedDateTime)),
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                    style: ButtonStyle(
+                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Color(0xFF38C0CE))),
+                    onPressed: () {},
+                    child: TextWidget(
+                        text: 'UPDATE',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w500)),
+                SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
+                        backgroundColor: MaterialStatePropertyAll(Colors.red)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: TextWidget(
+                        text: 'CANCEL',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w500)),
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> fetchDynamicDateTime(String selectedItem) async {
+    // Implement your logic here to fetch dynamic date and time based on the selected item
+    // For now, I'm using a simple example of returning the current date and time
+    DateTime now = DateTime.now();
+    return DateFormat('yyyy-MM-dd hh:mm a').format(now);
+  }
+
+  void showschedule(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
+    bool isCallMade = false;
+    bool isAppointmentConfirmed = false;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: TextWidget(
+                text: "Schedule Date and Time",
+                textcolor: Colors.black,
+                textsize: 20,
+                textweight: FontWeight.w500,
+              ),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        iconSize: 50,
+                        icon: Icon(Icons.calendar_today),
+                        onPressed: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDate,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2101),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              selectedDate = pickedDate;
+                            });
+                          }
+                        },
+                      ),
+                      TextWidget(
+                        text:
+                            '${DateFormat('yyyy-MM-dd').format(selectedDate)}',
+                        textcolor: Colors.black,
+                        textsize: 16,
+                        textweight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        iconSize: 50,
+                        icon: Icon(Icons.access_time),
+                        onPressed: () async {
+                          TimeOfDay? pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: selectedTime,
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              selectedTime = pickedTime;
+                            });
+                          }
+                        },
+                      ),
+                      TextWidget(
+                        text: '${selectedTime.format(context)}',
+                        textcolor: Colors.black,
+                        textsize: 16,
+                        textweight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isCallMade,
+                        onChanged: (value) {
+                          setState(() {
+                            isCallMade = value ?? false;
+                          });
+                        },
+                      ),
+                      TextWidget(
+                        text: 'Call Made',
+                        textcolor: Colors.black,
+                        textsize: 16,
+                        textweight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isAppointmentConfirmed,
+                        onChanged: (value) {
+                          setState(() {
+                            isAppointmentConfirmed = value ?? false;
+                          });
+                        },
+                      ),
+                      TextWidget(
+                        text: 'Appointment Confirmed',
+                        textcolor: Colors.black,
+                        textsize: 16,
+                        textweight: FontWeight.w500,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Color(0xFF38C0CE)),
+                      ),
+                      onPressed: () {
+                        // Handle the UPDATE action here
+                      },
+                      child: TextWidget(
+                        text: 'UPDATE',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
+                        backgroundColor: MaterialStatePropertyAll(Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: TextWidget(
+                        text: 'CANCEL',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }

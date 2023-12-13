@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
+import 'package:property_valuation/constant/list_of_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/live_visit_data_model.dart';
 import '../custom_widgets/popup_menu.dart';
 import '../custom_widgets/text_widgets.dart';
 import 'home_screen.dart';
@@ -25,12 +32,95 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
   TextEditingController _engineer = TextEditingController();
   TextEditingController _status = TextEditingController();
   TextEditingController _caseStatus = TextEditingController();
-  List<String> statusOptions = [
-    'Visit Done',
-    'Visit Failed',
-    'Partial Visit Done',
-    'Hold Application'
-  ];
+  String _id = "";
+  bool _isLoading = true;
+  List<String> statusOption = statusOptions;
+  String selctedStatusOption = "";
+
+  Future<void> fetchData() async {
+    try {
+      if (_id != null) {
+        await liveVisitbyId(_id);
+
+        // Update UI or perform any other actions based on 'liveVisitbyId' data
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        print('User ID is null');
+      }
+    } catch (e) {
+      print('Error in fetchData: $e');
+      // Handle errors
+    }
+  }
+
+  Future<void> liveVisitbyId(String id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('2');
+
+    final String? id = prefs.getString("id");
+    try {
+      Response response = await get(Uri.parse(
+          'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$id'));
+      if (response.statusCode == 200) {
+        setState(() {
+          final jsonData = jsonDecode(response.body);
+          final liveVisitData = LiveVisitData.fromJson(jsonData);
+          _reception.text = liveVisitData.data.username;
+          _branchOfficer.text = liveVisitData.data.username;
+          _engineer.text = liveVisitData.data.visitAllocatedname;
+          print('liveVisitbyId data response: $jsonData');
+
+          print(_reception.text);
+        });
+      }
+    } catch (e) {
+      print('Error : $e');
+    }
+  }
+
+  Future<void> updateLiveVisit() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? id = prefs.getString("id");
+    print("id is:$id");
+
+    try {
+      Map<String, dynamic> requestBody = {
+        "id": id,
+        "status": _status.text,
+        "CaseStatus": _caseStatus.text,
+      };
+      String phsicaljson = jsonEncode(requestBody);
+      // requestBody["mmsheet"] = mmsheetJson;
+      print("# $phsicaljson");
+      Response response = await put(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
+          headers: {"Content-Type": "application/json"},
+          body: phsicaljson);
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        print("API response: ${response.body}");
+
+        print("API response: $responseData");
+        print("PUT request successful");
+        print("Response status code: ${response.statusCode}");
+      } else {
+        print("error is :${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("Error during PUT request: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +208,11 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               SizedBox(
                 height: 5,
               ),
-              CustomTextField(controller: _reception),
+              CustomTextField(
+                controller: _reception,
+                readOnly: true,
+                enabled: false,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -128,7 +222,11 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               SizedBox(
                 height: 5,
               ),
-              CustomTextField(controller: _branchOfficer),
+              CustomTextField(
+                controller: _branchOfficer,
+                readOnly: true,
+                enabled: false,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -138,7 +236,11 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               SizedBox(
                 height: 5,
               ),
-              CustomTextField(controller: _engineer),
+              CustomTextField(
+                controller: _engineer,
+                readOnly: true,
+                enabled: false,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -149,8 +251,14 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               SizedBox(
                 height: 5,
               ),
-              CustomSelectionTextField(
-                  controller: _status, options: statusOptions),
+              CustomDropdownSearch(
+                  items: statusOption,
+                  selectedItem: selctedStatusOption,
+                  onChanged: (value) {
+                    selctedStatusOption = value!;
+                    _status.text = value;
+                  },
+                  controller: _status),
               SizedBox(
                 height: 10,
               ),
@@ -180,7 +288,9 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {},
+        onTap: () {
+          updateLiveVisit();
+        },
       ),
     );
   }
