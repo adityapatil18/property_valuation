@@ -749,29 +749,29 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
         ));
   }
 
-  void _showCustomDropdown(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Select Location'),
-            content: Container(
-              width: double.maxFinite,
-              child: ListView.builder(
-                itemCount: locationOptions.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  LocationListData item = locationOptions[index];
-                  return ListTile(
-                    title: Text(item.name),
-                    onTap: () {
-                      Navigator.pop(context, item);
-                    },
-                  );
-                },
-              ),
-            ),
-          );
-        });
-  }
+  // void _showCustomDropdown(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Select Location'),
+  //           content: Container(
+  //             width: double.maxFinite,
+  //             child: ListView.builder(
+  //               itemCount: locationOptions.length,
+  //               shrinkWrap: true,
+  //               itemBuilder: (context, index) {
+  //                 LocationListData item = locationOptions[index];
+  //                 return ListTile(
+  //                   title: Text(item.name),
+  //                   onTap: () {
+  //                     Navigator.pop(context, item);
+  //                   },
+  //                 );
+  //               },
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 }

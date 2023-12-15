@@ -48,8 +48,32 @@ class _PhyscialInspection1Screen1State
   String selectedPropertyOccupied = "";
 
   List<String>? filteredOptions;
-  bool isEditable = false;
+  // bool isEditable = false;
   bool _isLoading = true;
+  TextEditingController _bs1Controller = TextEditingController();
+  TextEditingController _bs2Controller = TextEditingController();
+  TextEditingController _bs3Controller = TextEditingController();
+  TextEditingController _bs4Controller = TextEditingController();
+  TextEditingController _bd1Controller = TextEditingController();
+  TextEditingController _bd2Controller = TextEditingController();
+  TextEditingController _bd3Controller = TextEditingController();
+  TextEditingController _bd4Controller = TextEditingController();
+  TextEditingController _ds1Controller = TextEditingController();
+  TextEditingController _ds2Controller = TextEditingController();
+  TextEditingController _ds3Controller = TextEditingController();
+  TextEditingController _ds4Controller = TextEditingController();
+  TextEditingController _dd1Controller = TextEditingController();
+  TextEditingController _dd2Controller = TextEditingController();
+  TextEditingController _dd3Controller = TextEditingController();
+  TextEditingController _dd4Controller = TextEditingController();
+  TextEditingController _ms1Controller = TextEditingController();
+  TextEditingController _ms2Controller = TextEditingController();
+  TextEditingController _ms3Controller = TextEditingController();
+  TextEditingController _ms4Controller = TextEditingController();
+  TextEditingController _md1Controller = TextEditingController();
+  TextEditingController _md2Controller = TextEditingController();
+  TextEditingController _md3Controller = TextEditingController();
+  TextEditingController _md4Controller = TextEditingController();
 
   TextEditingController _infrastructureController = TextEditingController();
   TextEditingController _distanceFromLandmarkRailwayController =
@@ -100,30 +124,30 @@ class _PhyscialInspection1Screen1State
             "NameofNearestHospital": _nearestHospitalController.text,
             "Conditionandwidthofapproachroad": "",
             "NameofNearestBusStop": _bustopNameController.text,
-            "BOUNDARIES_AS_PER_SITE1": "",
-            "BOUNDARIES_AS_PER_DEED1": "",
-            "DIMENSION_AS_PER_SITE1": "",
-            "DIMENSION_AS_PER_DEED1": "",
-            "MOS_AS_PER_SITE1": "",
-            "MOS_AS_PER_DEED1": "",
-            "BOUNDARIES_AS_PER_SITE2": "",
-            "BOUNDARIES_AS_PER_DEED2": "",
-            "DIMENSION_AS_PER_SITE2": "",
-            "DIMENSION_AS_PER_DEED2": "",
-            "MOS_AS_PER_SITE2": "",
-            "MOS_AS_PER_DEED2": "",
-            "BOUNDARIES_AS_PER_SITE3": "",
-            "BOUNDARIES_AS_PER_DEED3": "",
-            "DIMENSION_AS_PER_SITE3": "",
-            "DIMENSION_AS_PER_DEED3": "",
-            "MOS_AS_PER_SITE3": "",
-            "MOS_AS_PER_DEED3": "",
-            "BOUNDARIES_AS_PER_SITE4": "",
-            "BOUNDARIES_AS_PER_DEED4": "",
-            "DIMENSION_AS_PER_SITE4": "",
-            "DIMENSION_AS_PER_DEED4": "",
-            "MOS_AS_PER_SITE4": "",
-            "MOS_AS_PER_DEED4": "",
+            "BOUNDARIES_AS_PER_SITE1": _bs1Controller.text,
+            "BOUNDARIES_AS_PER_DEED1": _bd1Controller.text,
+            "DIMENSION_AS_PER_SITE1": _ds1Controller.text,
+            "DIMENSION_AS_PER_DEED1": _dd1Controller.text,
+            "MOS_AS_PER_SITE1": _ms1Controller.text,
+            "MOS_AS_PER_DEED1": _md1Controller.text,
+            "BOUNDARIES_AS_PER_SITE2": _bs2Controller.text,
+            "BOUNDARIES_AS_PER_DEED2": _bd1Controller.text,
+            "DIMENSION_AS_PER_SITE2": _ds2Controller.text,
+            "DIMENSION_AS_PER_DEED2": _dd2Controller.text,
+            "MOS_AS_PER_SITE2": _ms2Controller.text,
+            "MOS_AS_PER_DEED2": _md2Controller.text,
+            "BOUNDARIES_AS_PER_SITE3": _bs3Controller.text,
+            "BOUNDARIES_AS_PER_DEED3": _bd3Controller.text,
+            "DIMENSION_AS_PER_SITE3": _ds3Controller.text,
+            "DIMENSION_AS_PER_DEED3": _dd3Controller.text,
+            "MOS_AS_PER_SITE3": _ms3Controller.text,
+            "MOS_AS_PER_DEED3": _md3Controller.text,
+            "BOUNDARIES_AS_PER_SITE4": _bs4Controller.text,
+            "BOUNDARIES_AS_PER_DEED4": _bd4Controller.text,
+            "DIMENSION_AS_PER_SITE4": _ds4Controller.text,
+            "DIMENSION_AS_PER_DEED4": _dd4Controller.text,
+            "MOS_AS_PER_SITE4": _ms4Controller.text,
+            "MOS_AS_PER_DEED4": _md4Controller.text,
             "NameofPersonMetatSite": _sitePersonNameController.text,
             "ContactofPersonMetatSite": "",
             "Nameonsocietyboard": _societyNameController.text,
@@ -557,24 +581,24 @@ class _PhyscialInspection1Screen1State
                                 textweight: FontWeight.w500,
                               ),
                             ),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
+                            DataCell(TextField(
+                              controller: _bs1Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _bd1Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ds1Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _dd1Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ms1Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _md1Controller,
+                            )),
                           ]),
                           DataRow(cells: [
                             DataCell(
@@ -585,24 +609,24 @@ class _PhyscialInspection1Screen1State
                                 textweight: FontWeight.w500,
                               ),
                             ),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
+                            DataCell(TextField(
+                              controller: _bs2Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _bd2Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ds2Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _dd2Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ms2Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _md2Controller,
+                            )),
                           ]),
                           DataRow(cells: [
                             DataCell(
@@ -613,24 +637,24 @@ class _PhyscialInspection1Screen1State
                                 textweight: FontWeight.w500,
                               ),
                             ),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
+                            DataCell(TextField(
+                              controller: _bs3Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _bd3Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ds3Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _dd3Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ms3Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _md3Controller,
+                            )),
                           ]),
                           DataRow(cells: [
                             DataCell(
@@ -641,24 +665,24 @@ class _PhyscialInspection1Screen1State
                                 textweight: FontWeight.w500,
                               ),
                             ),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
-                            DataCell(isEditable
-                                ? _buildEditableTextField()
-                                : Text('')),
+                            DataCell(TextField(
+                              controller: _bs4Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _bd4Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ds4Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _dd4Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _ms4Controller,
+                            )),
+                            DataCell(TextField(
+                              controller: _md4Controller,
+                            )),
                           ]),
                         ],
                       ),
@@ -666,19 +690,18 @@ class _PhyscialInspection1Screen1State
                     SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.green)),
-                      onPressed: () {
-                        setState(() {
-                          isEditable = !isEditable;
-                        });
-                      },
-                      child: Text(
-                          style: TextStyle(color: Colors.white),
-                          isEditable ? 'Done Editing' : 'Add/Edit'),
-                    ),
+                    // ElevatedButton(
+                    //   style: ButtonStyle(
+                    //       backgroundColor:
+                    //           MaterialStatePropertyAll(Colors.green)),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //     });
+                    //   },
+                    //   child: Text(
+                    //       style: TextStyle(color: Colors.white),
+                    //       isEditable ? 'Done Editing' : 'Add/Edit'),
+                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -838,14 +861,72 @@ class _PhyscialInspection1Screen1State
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {
-          updateLiveVisit();
+        onTap: () async {
+          try {
+            await updateLiveVisit();
+
+            // If the update is successful, show a SnackBar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Data updated successfully!'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            // Clear controller values
+            _infrastructureController.clear();
+            _distanceFromLandmarkRailwayController.clear();
+            _neighbourhoodTypeController.clear();
+            _distnacefrombank.clear();
+            _localityRatingController.clear();
+            _proximityController.clear();
+            _ZoneDpController.clear();
+            _boundiresMatchingController.clear();
+            _bustopNameController.clear();
+            _compoundWallandGatesController.clear();
+            _marketablityController.clear();
+            _nameofReportedOwnerController.clear();
+            _nearestHospitalController.clear();
+            _societyNameController.clear();
+            _occupancyOfBuildingContoller.clear();
+            _occupantNameController.clear();
+            _occupantRelationshipController.clear();
+            _occupiedSinceController.clear();
+            _policeStationController.clear();
+            _propertyOccupiedORVaccantController.clear();
+            _rentController.clear();
+            _roadConditionController.clear();
+            _sitePersonNameController.clear();
+            _bs1Controller.clear();
+            _bs2Controller.clear();
+            _bs3Controller.clear();
+            _bs4Controller.clear();
+            _bd1Controller.clear();
+            _bd2Controller.clear();
+            _bd3Controller.clear();
+            _bd4Controller.clear();
+            _ds1Controller.clear();
+            _ds2Controller.clear();
+            _ds3Controller.clear();
+            _ds4Controller.clear();
+            _dd1Controller.clear();
+            _dd2Controller.clear();
+            _dd3Controller.clear();
+            _dd4Controller.clear();
+            _ms1Controller.clear();
+            _ms2Controller.clear();
+            _ms3Controller.clear();
+            _ms4Controller.clear();
+            _md1Controller.clear();
+            _md2Controller.clear();
+            _md3Controller.clear();
+            _md4Controller.clear();
+            // Clear other controllers as needed
+          } catch (e) {
+            // Handle error if the update fails
+            print("Error updating data: $e");
+          }
         },
       ),
     );
-  }
-
-  Widget _buildEditableTextField() {
-    return TextFormField();
   }
 }

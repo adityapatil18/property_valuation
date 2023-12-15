@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> statusOption = statusOptions;
   String selectedCaseStatus = "";
   TextEditingController _caseStaus = TextEditingController();
+  TextEditingController _selectedDateTimewithCase = TextEditingController();
   Future<void> fetchData() async {
     try {
       // Retrieve the token from shared preferences
@@ -455,6 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     onTap: () {
                                       showschedule(context);
+                                      // resetValues();
                                     },
                                   ),
                                   GestureDetector(
@@ -489,7 +491,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _makingPhoneCall() async {
-    var url = Uri.parse("tel:9776765434");
+    var url = Uri.parse("tel:9876543210");
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     } else {
@@ -497,74 +499,92 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void showUpdateCaseStatus(BuildContext context) {
-    String selectedDateTime = ""; // Variable to store selected date and time
+  String selectedDateTime = ""; // Variable to store selected date and time
 
+  void showUpdateCaseStatus(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: TextWidget(
-              text: "Update Case Status",
-              textcolor: Colors.black,
-              textsize: 20,
-              textweight: FontWeight.w500),
-          actions: [
-            CustomDropdownSearch(
-                items: statusOption,
-                selectedItem: selectedCaseStatus,
-                onChanged: (value) {
-                  setState(() {
-                    selectedCaseStatus = value!;
-                    _caseStaus.text = value;
-                  });
-                  // Fetch the dynamic date and time based on the selected item
-                  setState(() {
-                    fetchDynamicDateTime(value!).then((dynamicDateTime) {
-                      setState(() {
-                        selectedDateTime = dynamicDateTime;
-                      });
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: TextWidget(
+                text: "Update Case Status",
+                textcolor: Colors.black,
+                textsize: 20,
+                textweight: FontWeight.w500,
+              ),
+              actions: [
+                CustomDropdownSearch(
+                  items: statusOption,
+                  selectedItem: selectedCaseStatus,
+                  onChanged: (value) async {
+                    setState(() {
+                      selectedCaseStatus = value!;
+                      _caseStaus.text = value;
                     });
-                  });
-                },
-                controller: _caseStaus),
-            TextField(
-                controller: TextEditingController(text: selectedDateTime)),
-            SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                    style: ButtonStyle(
-                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
+
+                    // Fetch the dynamic date and time based on the selected item
+                    final dynamicDateTime = await fetchDynamicDateTime(value!);
+
+                    setState(() {
+                      selectedDateTime = dynamicDateTime;
+                    });
+                  },
+                  controller: _caseStaus,
+                ),
+                TextField(
+                  readOnly: true,
+                  controller: TextEditingController(
+                      text: "$selectedDateTime-${_caseStaus.text}"),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStateProperty.all(Size(100, 30)),
                         backgroundColor:
-                            MaterialStatePropertyAll(Color(0xFF38C0CE))),
-                    onPressed: () {},
-                    child: TextWidget(
+                            MaterialStateProperty.all(Color(0xFF38C0CE)),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        resetValues();
+                      },
+                      child: TextWidget(
                         text: 'UPDATE',
                         textcolor: Colors.white,
                         textsize: 12,
-                        textweight: FontWeight.w500)),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        fixedSize: MaterialStatePropertyAll(Size(100, 30)),
-                        backgroundColor: MaterialStatePropertyAll(Colors.red)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextWidget(
+                        textweight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStateProperty.all(Size(100, 30)),
+                        backgroundColor: MaterialStateProperty.all(Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        resetValues();
+                      },
+                      child: TextWidget(
                         text: 'CANCEL',
                         textcolor: Colors.white,
                         textsize: 12,
-                        textweight: FontWeight.w500)),
+                        textweight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
+            );
+          },
         );
       },
     );
@@ -575,6 +595,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // For now, I'm using a simple example of returning the current date and time
     DateTime now = DateTime.now();
     return DateFormat('yyyy-MM-dd hh:mm a').format(now);
+  }
+
+  void resetValues() {
+    selectedDateTime = "";
+    // selectedCaseStatus = "";
+    _caseStaus.clear();
   }
 
   void showschedule(BuildContext context) async {
@@ -621,7 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       TextWidget(
                         text:
                             '${DateFormat('yyyy-MM-dd').format(selectedDate)}',
-                        textcolor: Colors.black,
+                        textcolor: const Color.fromRGBO(0, 0, 0, 1),
                         textsize: 16,
                         textweight: FontWeight.w500,
                       ),
