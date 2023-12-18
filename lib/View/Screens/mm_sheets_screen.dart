@@ -27,7 +27,7 @@ class MMSheetsScreen extends StatefulWidget {
 }
 
 class _MMSheetsScreenState extends State<MMSheetsScreen> {
-  String selectedOption = "";
+  String selectedType = "";
   bool _isLoading = true;
 
   final List<DataRow> _rows = [];
@@ -78,7 +78,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
         "mmsheet": [
           {
             "rows": rowsData,
-            "mmsheetType": selectedOption,
+            "mmsheetType": selectedType,
             "BalconyTotal": getCategoryTotalArea('Balcony'),
             "CarpetAreaTotal": getCategoryTotalArea('Carpet Area'),
             "OtherAreaTotal": getCategoryTotalArea('Other Area'),
@@ -242,10 +242,10 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                           textweight: FontWeight.w500),
                       RadioListTile(
                         value: 'residential',
-                        groupValue: selectedOption,
+                        groupValue: selectedType,
                         onChanged: (value) {
                           setState(() {
-                            selectedOption = value!;
+                            selectedType = value!;
                           });
                         },
                         title: TextWidget(
@@ -256,10 +256,10 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                       ),
                       RadioListTile(
                         value: 'commercial',
-                        groupValue: selectedOption,
+                        groupValue: selectedType,
                         onChanged: (value) {
                           setState(() {
-                            selectedOption = value!;
+                            selectedType = value!;
                           });
                         },
                         title: TextWidget(
@@ -390,14 +390,35 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                 textweight: FontWeight.w500),
           ),
           onTap: () async {
-            final SharedPreferences prefs =
-                await SharedPreferences.getInstance();
-            print('2');
+            try {
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+              print('2');
 
-            final String? id = prefs.getString("id");
-            print("id is:$id");
-            print('1');
-            updateLiveVisit();
+              final String? id = prefs.getString("id");
+              print("id is:$id");
+              print('1');
+
+              await updateLiveVisit();
+
+// If the update is successful, navigate to the next screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PhyscialInspection1Screen1(),
+                ),
+              );
+
+              // If the update is successful, show a SnackBar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Data updated successfully!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            } catch (e) {
+              print("Error updating data: $e");
+            }
           },
         ));
   }
@@ -571,14 +592,14 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                             enabled: true,
                             onChanged: (value) {
                               setState(() {
-                                selectedOption = value!;
+                                selectedType = value!;
                                 _groupHead.text =
                                     cateogory[value] ?? ''; // Set category
                                 _area.text = value ?? ''; // Set area
                               });
                             },
                             // onSaved: (newValue) {
-                            //   selectedOption = newValue!;
+                            //   selectedType = newValue!;
                             //   _groupHead.text = cateogory[newValue] ?? "";
                             // },
                             validator: (value) {
@@ -648,16 +669,6 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    // if (_area.text.isNotEmpty) {
-                                    //   _addDataRow(
-                                    //     _groupHead.text,
-                                    //     _area.text,
-                                    //     _sequence.text,
-                                    //     _length.text,
-                                    //     _width.text,
-                                    //     _areaC.text,
-                                    //   );
-                                    // }
                                     _addDataRow(
                                       _groupHead.text,
                                       _area.text,

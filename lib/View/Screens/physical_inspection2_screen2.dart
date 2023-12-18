@@ -1251,8 +1251,68 @@ class _PhysicalInspection2Screen2State
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {
-          updateLiveVisit();
+        onTap: () async {
+          try {
+            if (_yearOfConstruction.text.isEmpty) {
+              // Show an error message if the landmark field is empty
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'Please provide a value for the Year of construction field.'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              return; // Exit the method without updating if the landmark field is empty
+            }
+            await updateLiveVisit();
+
+// If the update is successful, navigate to the next screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CaseStatusScreen(),
+              ),
+            );
+
+            // If the update is successful, show a SnackBar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Data updated successfully!'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            // Clear controller values
+            _physicalstatusController.clear();
+            _pecentageController.clear();
+            _propertyType.clear();
+            _propertyUsage.clear();
+            _indipendentUit.clear();
+            _remarkviewProperty.clear();
+            _perflooraAndPositionUnit.clear();
+            _accomendationUnit.clear();
+            _wingsINSoceiety.clear();
+            _numberOfStoyires.clear();
+            _exterior.clear();
+            _interior.clear();
+            _fitting.clear();
+            _flooring.clear();
+            _window.clear();
+            _door.clear();
+            _propertyAge.clear();
+            _maintainceLevel.clear();
+            _popertyACCValue.clear();
+            _selctConstructionPlan.clear();
+            _commercialUsageDetails.clear();
+            _entireBldgType.clear();
+            _yearOfConstruction.clear();
+            _souurondedBy.clear();
+            _residualAge.clear();
+            _remark.clear();
+            _independentacess.clear();
+          } catch (e) {
+            // Handle error if the update fails
+            print("Error updating data: $e");
+          }
         },
       ),
     );

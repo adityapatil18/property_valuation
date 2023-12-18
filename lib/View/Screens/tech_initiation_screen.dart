@@ -57,6 +57,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   TextEditingController _landmark = TextEditingController();
   TextEditingController _pincode = TextEditingController();
   String _id = "";
+  String? _landmarkError;
+
   // List<String> locationOptions = [];
   List<LocationListData> locationOptions = [];
   LocationListData? selectedLocation;
@@ -715,7 +717,10 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                       SizedBox(
                         height: 5,
                       ),
-                      CustomTextField(controller: _landmark),
+                      CustomTextField(
+                        // errortext: _landmarkError,
+                        controller: _landmark,
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -743,35 +748,56 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 textsize: 18,
                 textweight: FontWeight.w500),
           ),
-          onTap: () {
-            updateLiveVisit(_id);
+          onTap: () async {
+            try {
+              if (_landmark.text.isEmpty) {
+                // Show an error message if the landmark field is empty
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text('Please provide a value for the landmark field.'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                return; // Exit the method without updating if the landmark field is empty
+              }
+
+              await updateLiveVisit(_id);
+
+              // If the update is successful, navigate to the next screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImagesScreen(),
+                ),
+              );
+              // If the update is successful, show a SnackBar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Data updated successfully!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              _addressRequest.clear();
+              _addressInspection.clear();
+              _cts.clear();
+              _wardName.clear();
+              _flatNo.clear();
+              _floor.clear();
+              _socity.clear();
+              _plotNo.clear();
+              _sectorColony.clear();
+              _road.clear();
+              _location.clear();
+              _city.clear();
+              _district.clear();
+              _landmark.clear();
+              _pincode.clear();
+            } catch (e) {
+              // Handle error if the update fails
+              print("Error updating data: $e");
+            }
           },
         ));
   }
-
-  // void _showCustomDropdown(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Select Location'),
-  //           content: Container(
-  //             width: double.maxFinite,
-  //             child: ListView.builder(
-  //               itemCount: locationOptions.length,
-  //               shrinkWrap: true,
-  //               itemBuilder: (context, index) {
-  //                 LocationListData item = locationOptions[index];
-  //                 return ListTile(
-  //                   title: Text(item.name),
-  //                   onTap: () {
-  //                     Navigator.pop(context, item);
-  //                   },
-  //                 );
-  //               },
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
 }

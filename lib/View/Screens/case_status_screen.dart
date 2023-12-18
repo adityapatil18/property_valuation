@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
+import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
-import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
 import 'package:property_valuation/constant/list_of_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -127,7 +127,12 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            setState(() {
+              print('s');
+              Navigator.pop(context);
+              print('object');
+            });
+            print('ss');
           },
           icon: Icon(
             Icons.arrow_back_ios_new,
@@ -196,86 +201,90 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
           })
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomRichText(
-                mainText: 'Reception',
+      body: _isLoading
+          ? Center(
+              child: LoadingIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomRichText(
+                      mainText: 'Reception',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _reception,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Branch Officer',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _branchOfficer,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Engineer',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      controller: _engineer,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Status',
+                      isRequired: true,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomDropdownSearch(
+                        items: statusOption,
+                        selectedItem: selctedStatusOption,
+                        onChanged: (value) {
+                          selctedStatusOption = value!;
+                          _status.text = value;
+                        },
+                        controller: _status),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomRichText(
+                      mainText: 'Case Status',
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                        height: 200,
+                        width: MediaQuery.sizeOf(context).width,
+                        child: CustomTextField(controller: _caseStatus)),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _reception,
-                readOnly: true,
-                enabled: false,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Branch Officer',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _branchOfficer,
-                readOnly: true,
-                enabled: false,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Engineer',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomTextField(
-                controller: _engineer,
-                readOnly: true,
-                enabled: false,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Status',
-                isRequired: true,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomDropdownSearch(
-                  items: statusOption,
-                  selectedItem: selctedStatusOption,
-                  onChanged: (value) {
-                    selctedStatusOption = value!;
-                    _status.text = value;
-                  },
-                  controller: _status),
-              SizedBox(
-                height: 10,
-              ),
-              CustomRichText(
-                mainText: 'Case Status',
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                  height: 200,
-                  width: MediaQuery.sizeOf(context).width,
-                  child: CustomTextField(controller: _caseStatus)),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: GestureDetector(
         child: Container(
           alignment: Alignment.center,
@@ -288,8 +297,21 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {
-          updateLiveVisit();
+        onTap: () async {
+          try {
+            await updateLiveVisit();
+            // If the update is successful, show a SnackBar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Data updated successfully!'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            _caseStatus.clear();
+            _status.clear();
+          } catch (e) {
+            print("Error updating data: $e");
+          }
         },
       ),
     );

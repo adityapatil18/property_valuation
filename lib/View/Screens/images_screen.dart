@@ -504,7 +504,15 @@ class _ImagesScreenState extends State<ImagesScreen> {
               textsize: 18,
               textweight: FontWeight.w500),
         ),
-        onTap: () {},
+        onTap: () {
+          // If the update is successful, navigate to the next screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MMSheetsScreen(),
+            ),
+          );
+        },
       ),
     );
   }

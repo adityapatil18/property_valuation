@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? readOnly;
   final bool? enabled;
+  final String? errortext;
 
   const CustomTextField({
     required this.controller,
@@ -16,6 +17,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.readOnly,
     this.enabled,
+    this.errortext,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class CustomTextField extends StatelessWidget {
           color: Colors.black,
         ),
         decoration: InputDecoration(
+          errorText: errortext,
           hintText: hintText,
           hintStyle: TextStyle(
             color: Colors.black,

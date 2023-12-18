@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String instituteName = "";
   String contactPerson = "";
   String address = "";
+  String abc = '';
   DateTime? dateOfVisit;
   DateTime? dateOfReschedule;
   String specialInstruction = "";
@@ -113,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
               .data.dataarray[0].manageInstitute[0].maininstitutiondata[0].name;
           dateOfVisit =
               enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
+          final abc = dateOfVisit!.toLocal().toString().substring(0, 10);
+          print('abc:$abc');
           dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
           // specialInstruction=enginerVisitCaseData.data.dataarray[0].
           print('Data updated successfully');
@@ -282,7 +286,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Row(
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Clipboard.setData(
+                                                    const ClipboardData(
+                                                        text: "LP-8"))
+                                                .then((_) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          'Copied to your clipboard !')));
+                                            });
+                                          },
                                           icon: Icon(
                                             Icons.copy,
                                             color: Colors.black,
@@ -392,12 +406,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             textsize: 15,
                                             textweight: FontWeight.w500),
                                         TextWidget(
-                                            text: '$dateOfVisit',
+                                            text:
+                                                '${dateOfVisit!.toLocal().toString().substring(0, 10)}',
                                             textcolor: Colors.black,
                                             textsize: 15,
                                             textweight: FontWeight.w500),
                                         TextWidget(
-                                            text: '$dateOfReschedule',
+                                            text:
+                                                '${dateOfReschedule!.toLocal().toString().substring(0, 10)}',
                                             textcolor: Colors.black,
                                             textsize: 15,
                                             textweight: FontWeight.w500),

@@ -863,7 +863,26 @@ class _PhyscialInspection1Screen1State
         ),
         onTap: () async {
           try {
+            if (_distanceFromLandmarkRailwayController.text.isEmpty) {
+              // Show an error message if the landmark field is empty
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'Please provide a value for the Distance from Landmark/Railway Station field.'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              return; // Exit the method without updating if the landmark field is empty
+            }
             await updateLiveVisit();
+
+// If the update is successful, navigate to the next screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PhysicalInspection2Screen2(),
+              ),
+            );
 
             // If the update is successful, show a SnackBar
             ScaffoldMessenger.of(context).showSnackBar(
