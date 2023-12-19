@@ -12,6 +12,7 @@ import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
 import 'package:property_valuation/constant/list_of_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../custom_widgets/navigator_conatiner.dart';
 import '../custom_widgets/popup_menu.dart';
 import '../custom_widgets/text_widgets.dart';
 import 'case_status_screen.dart';
@@ -850,17 +851,7 @@ class _PhyscialInspection1Screen1State
               ),
             ),
       bottomNavigationBar: GestureDetector(
-        child: Container(
-          alignment: Alignment.center,
-          height: 60,
-          width: MediaQuery.sizeOf(context).width,
-          color: Color(0xFF38C0CE),
-          child: TextWidget(
-              text: 'Submit to Propval',
-              textcolor: Colors.white,
-              textsize: 18,
-              textweight: FontWeight.w500),
-        ),
+        child: NavigatorConatiner(),
         onTap: () async {
           try {
             if (_distanceFromLandmarkRailwayController.text.isEmpty) {

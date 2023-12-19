@@ -7,6 +7,7 @@ import 'package:property_valuation/View/Screens/case_status_screen.dart';
 import 'package:property_valuation/View/custom_widgets/custom_mm_textfield.dart';
 import 'package:property_valuation/View/custom_widgets/drop_downsearch_widget.dart';
 import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
+import 'package:property_valuation/View/custom_widgets/navigator_conatiner.dart';
 import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -378,17 +379,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
                 ),
               ),
         bottomNavigationBar: GestureDetector(
-          child: Container(
-            alignment: Alignment.center,
-            height: 60,
-            width: MediaQuery.sizeOf(context).width,
-            color: Color(0xFF38C0CE),
-            child: TextWidget(
-                text: 'Submit to Propval',
-                textcolor: Colors.white,
-                textsize: 18,
-                textweight: FontWeight.w500),
-          ),
+          child: NavigatorConatiner(),
           onTap: () async {
             try {
               final SharedPreferences prefs =
