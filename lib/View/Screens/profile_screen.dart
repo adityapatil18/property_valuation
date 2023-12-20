@@ -8,7 +8,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -40,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     TextWidget(
                         text: 'First Name',
-                        textcolor: Colors.white,
+                        textcolor: Colors.black,
                         textsize: 16,
                         textweight: FontWeight.w500),
                     SizedBox(
@@ -50,12 +49,12 @@ class ProfileScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: 'First Name',
                           hintStyle: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           ))),
                     ),
                     SizedBox(
@@ -63,7 +62,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     TextWidget(
                         text: 'Last Name',
-                        textcolor: Colors.white,
+                        textcolor: Colors.black,
                         textsize: 16,
                         textweight: FontWeight.w500),
                     SizedBox(
@@ -73,12 +72,12 @@ class ProfileScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: 'Last Name',
                           hintStyle: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           ))),
                     ),
                     SizedBox(
@@ -86,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     TextWidget(
                         text: 'Mobile Number',
-                        textcolor: Colors.white,
+                        textcolor: Colors.black,
                         textsize: 16,
                         textweight: FontWeight.w500),
                     SizedBox(
@@ -96,12 +95,12 @@ class ProfileScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: 'Mobile Number',
                           hintStyle: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           ))),
                     ),
                     SizedBox(
@@ -109,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     TextWidget(
                         text: 'Email',
-                        textcolor: Colors.white,
+                        textcolor: Colors.black,
                         textsize: 16,
                         textweight: FontWeight.w500),
                     SizedBox(
@@ -119,12 +118,12 @@ class ProfileScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: 'Email',
                           hintStyle: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           ))),
                     ),
                   ],

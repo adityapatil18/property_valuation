@@ -25,7 +25,7 @@ class ContactUsScreen extends StatelessWidget {
             textsize: 20,
             textweight: FontWeight.w500),
       ),
-      backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
+      // backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
       body: Column(
         children: [
           Image.asset(
@@ -38,18 +38,18 @@ class ContactUsScreen extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                   border: Border(
-                      top: BorderSide(color: Colors.white),
-                      bottom: BorderSide(color: Colors.white))),
+                      top: BorderSide(color: Colors.black),
+                      bottom: BorderSide(color: Colors.black))),
               width: MediaQuery.sizeOf(context).width,
               child: ListTile(
                 leading: TextWidget(
-                    text: 'Mobile : +91 702 800 7642',
-                    textcolor: Colors.white,
+                    text: 'Mobile : +91 99601 70089',
+                    textcolor: Colors.black,
                     textsize: 18,
                     textweight: FontWeight.w500),
                 trailing: Icon(
                   Icons.call,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 25,
                 ),
               )),
@@ -57,17 +57,17 @@ class ContactUsScreen extends StatelessWidget {
               alignment: Alignment.center,
               height: 100,
               decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.white))),
+                  border: Border(bottom: BorderSide(color: Colors.black))),
               width: MediaQuery.sizeOf(context).width,
               child: ListTile(
                 leading: TextWidget(
                     text: 'Email  : TechGigs@gmail.com',
-                    textcolor: Colors.white,
+                    textcolor: Colors.black,
                     textsize: 18,
                     textweight: FontWeight.w500),
                 trailing: Icon(
                   Icons.email,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 25,
                 ),
               )),
@@ -80,7 +80,7 @@ class ContactUsScreen extends StatelessWidget {
             child: ListTile(
               leading: Icon(
                 Icons.location_on,
-                color: Colors.white,
+                color: Colors.black,
                 size: 50,
               ),
               title: Flexible(
@@ -89,7 +89,7 @@ class ContactUsScreen extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 4,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w500),
                 ),

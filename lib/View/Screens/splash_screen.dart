@@ -12,7 +12,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   double progressPercent = 0.0;
-  
 
   @override
   Widget build(BuildContext context) {

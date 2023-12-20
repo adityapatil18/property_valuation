@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String borrowerName = "";
   String instituteName = "";
   String contactPerson = "";
+  String mobileNumber = "";
+
   String address = "";
   String abc = '';
   DateTime? dateOfVisit;
@@ -107,6 +109,12 @@ class _HomeScreenState extends State<HomeScreen> {
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
         setState(() {
+          // final ids = enginerVisitCaseData.data.dataarray[0].id;
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => TechInitiationScreen(),
+          //     ));
           locationName =
               enginerVisitCaseData.data.dataarray[0].locationData[0].name;
           borrowerName = enginerVisitCaseData.data.dataarray[0].borrowerName;
@@ -115,7 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
               .data.dataarray[0].manageInstitute[0].maininstitutiondata[0].name;
           dateOfVisit =
               enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
-          final abc = dateOfVisit!.toLocal().toString().substring(0, 10);
+          // final abc = dateOfVisit!.toLocal().toString().substring(0, 10);
+          mobileNumber = enginerVisitCaseData.data.dataarray[0].mobileNo1;
           print('abc:$abc');
           dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
           // specialInstruction=enginerVisitCaseData.data.dataarray[0].
@@ -401,19 +410,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             textsize: 15,
                                             textweight: FontWeight.w500),
                                         TextWidget(
-                                            text: '$address',
+                                            text: '${address}',
                                             textcolor: Colors.black,
                                             textsize: 15,
                                             textweight: FontWeight.w500),
                                         TextWidget(
                                             text:
-                                                '${dateOfVisit!.toLocal().toString().substring(0, 10)}',
+                                                '${dateOfVisit?.toLocal().toString().substring(0, 10)}',
                                             textcolor: Colors.black,
                                             textsize: 15,
                                             textweight: FontWeight.w500),
                                         TextWidget(
                                             text:
-                                                '${dateOfReschedule!.toLocal().toString().substring(0, 10)}',
+                                                '${dateOfReschedule?.toLocal().toString().substring(0, 10)}',
                                             textcolor: Colors.black,
                                             textsize: 15,
                                             textweight: FontWeight.w500),
@@ -491,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           textweight: FontWeight.w800),
                                     ),
                                     onTap: () {
-                                      _makingPhoneCall();
+                                      _makePhoneCall(mobileNumber);
                                     },
                                   ),
                                 ],
@@ -506,10 +515,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ));
   }
 
-  _makingPhoneCall() async {
-    var url = Uri.parse("tel:9876543210");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+  _makePhoneCall(String mobileNumber) async {
+    // Use 'tel:' scheme for making phone calls
+    var url = 'tel:$mobileNumber';
+
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
       throw 'Could not launch $url';
     }
@@ -698,6 +709,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       Checkbox(
+                        activeColor: Color(0xFF38C0CE),
+                        checkColor: Colors.white,
                         value: isCallMade,
                         onChanged: (value) {
                           setState(() {
@@ -716,6 +729,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       Checkbox(
+                        activeColor: Color(0xFF38C0CE),
+                        checkColor: Colors.white,
                         value: isAppointmentConfirmed,
                         onChanged: (value) {
                           setState(() {

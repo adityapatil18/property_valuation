@@ -67,9 +67,9 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
         setState(() {
           final jsonData = jsonDecode(response.body);
           final liveVisitData = LiveVisitData.fromJson(jsonData);
-          _reception.text = liveVisitData.data.username;
-          _branchOfficer.text = liveVisitData.data.username;
-          _engineer.text = liveVisitData.data.visitAllocatedname;
+          _reception.text = liveVisitData.data.username!;
+          _branchOfficer.text = liveVisitData.data.username!;
+          _engineer.text = liveVisitData.data.visitAllocatedname!;
           print('liveVisitbyId data response: $jsonData');
 
           print(_reception.text);

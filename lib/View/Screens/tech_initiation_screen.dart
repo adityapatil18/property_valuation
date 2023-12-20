@@ -136,21 +136,21 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
           final liveVisitData = LiveVisitData.fromJson(jsonData);
           print('liveVisitbyId data response: $jsonData');
           print("livevistsidat::$liveVisitData");
-          _instituteType.text = liveVisitData.data.institutionType;
-          _instituteName.text = liveVisitData.data.maininstitutionname;
-          __insituteBranch.text = liveVisitData.data.manageInstitutename;
+          _instituteType.text = liveVisitData.data.institutionType!;
+          _instituteName.text = liveVisitData.data.maininstitutionname!;
+          __insituteBranch.text = liveVisitData.data.manageInstitutename!;
           String formmatedRequestDate =
               DateFormat('yyyy-MM-dd').format(liveVisitData.data.requestDate);
           _dateofrequest.text = formmatedRequestDate;
           String formmatedVisitDate = DateFormat('yyyy-MM-dd')
               .format(liveVisitData.data.visitScheduledDate);
           _dateofvisit.text = formmatedVisitDate;
-          _nameOfApplicant.text = liveVisitData.data.borrowerName;
-          _nameofPerson.text = liveVisitData.data.contactPersonName;
-          _mobileNumber.text = liveVisitData.data.mobileNo1;
-          _filerefNo.text = liveVisitData.data.filerefNo;
-          _cas.text = liveVisitData.data.casNo;
-          _loanType.text = liveVisitData.data.loanType;
+          _nameOfApplicant.text = liveVisitData.data.borrowerName!;
+          _nameofPerson.text = liveVisitData.data.contactPersonName!;
+          _mobileNumber.text = liveVisitData.data.mobileNo1!;
+          _filerefNo.text = liveVisitData.data.filerefNo!;
+          _cas.text = liveVisitData.data.casNo!;
+          _loanType.text = liveVisitData.data.loanType!;
 
           print(_instituteType.text);
         });
