@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/shared_functions.dart';
 import '../../model/enginer_visit_case_model.dart';
+import '../../model/live_visit_data_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,7 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
   String instituteName = "";
   String contactPerson = "";
   String mobileNumber = "";
+  String mobileNumber1 = "";
 
+  String mobileNumber2 = "";
+  String mobileNumber3 = "";
+  String landLineNumber1 = '';
+  String landLineNumber2 = '';
+
+  String _id = "";
   String address = "";
   String abc = '';
   DateTime? dateOfVisit;
@@ -64,6 +72,26 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       print('Error in fetchData: $e');
       // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<void> fetchData2() async {
+    try {
+      // Ensure you have the userId before calling enginerVisitCaseList
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      if (userId != null) {
+        final String? _id = await enginerVisitCaseList2(userId);
+
+        if (_id != null) {
+          await liveVisitbyId(_id);
+          print("live vist $_id");
+        }
+      } else {
+        print('User ID is null');
+      }
+    } catch (e) {
+      print('Error in fetchData: $e');
+      // Handle errors
     }
   }
 
@@ -108,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         var responseData = jsonDecode(response.body);
         final enginerVisitCaseData =
             EnginerVisitCaseData.fromJson(responseData);
+
         setState(() {
           // final ids = enginerVisitCaseData.data.dataarray[0].id;
           // Navigator.push(
@@ -142,12 +171,90 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<String?> enginerVisitCaseList2(String userId) async {
+    try {
+      Response response = await post(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        final enginerVisitCaseData =
+            EnginerVisitCaseData.fromJson(responseData);
+        _id = enginerVisitCaseData.data.dataarray[0].id;
+        print("api respnse for responsedata::${responseData}");
+        print('_id===>$_id');
+        await _sharedPreferencesHelper.saveid(_id);
+
+        return enginerVisitCaseData.data.dataarray[0].id;
+      } else {
+        print(
+            'Failed to send userId to the third API. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending userId to the third API: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('An error occurred while fetching data.'),
+      ));
+    }
+  }
+
+  Future<void> liveVisitbyId(String _id) async {
+    print("Debug: liveVisitbyId - _id: $_id");
+
+    try {
+      Response response = await get(Uri.parse(
+          'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$_id'));
+      print('liveVisitbyId response status code: ${response.statusCode}');
+      print('liveVisitbyId response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        setState(() {
+          final jsonData = jsonDecode(response.body);
+          final liveVisitData = LiveVisitData.fromJson(jsonData);
+          print('liveVisitbyId data response: $jsonData');
+          print("livevistsidat::$liveVisitData");
+          final abcd = liveVisitData.data.mobileNo1;
+          mobileNumber1 = liveVisitData.data.mobileNo1!;
+          mobileNumber2 = liveVisitData.data.mobileNo2!;
+          mobileNumber3 = liveVisitData.data.mobileNo3!;
+          landLineNumber1 = liveVisitData.data.landlineNumber1!;
+          landLineNumber2 = liveVisitData.data.landlineNumber2!;
+          print("abcd:$abcd");
+        });
+      } else {
+        print(
+            "Failed to fetch liveVisitbyId. Status code: ${response.statusCode}");
+        // Handle the case where the API call is not successful
+        // You might want to set default values or show an error message
+      }
+    } catch (e) {
+      print('Error in liveVisitbyId: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      // Assuming that _id is already set by fetchData
+      await liveVisitbyId(_id);
+      // Additional initialization or data loading if needed
+
+      // Now you can proceed with any other code that depends on the data
+    } catch (e) {
+      print('Error initializing data: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
       fetchData();
+      // _initializeData();
+      fetchData2();
     });
   }
 
@@ -494,13 +601,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: TextWidget(
-                                          text: 'Call',
-                                          textcolor: Colors.white,
-                                          textsize: 12,
-                                          textweight: FontWeight.w800),
+                                        text: 'Call',
+                                        textcolor: Colors.white,
+                                        textsize: 12,
+                                        textweight: FontWeight.w800,
+                                      ),
                                     ),
                                     onTap: () {
-                                      _makePhoneCall(mobileNumber);
+                                      // Replace 'yourListOfMobileNumbers' with the actual list of mobile numbers
+                                      List<String> yourListOfMobileNumbers = [
+                                        mobileNumber1,
+                                        mobileNumber2,
+                                        mobileNumber3,
+                                        landLineNumber1,
+                                        landLineNumber2,
+                                      ];
+                                      _makePhoneCall(yourListOfMobileNumbers);
                                     },
                                   ),
                                 ],
@@ -515,7 +631,50 @@ class _HomeScreenState extends State<HomeScreen> {
               ));
   }
 
-  _makePhoneCall(String mobileNumber) async {
+  void _makePhoneCall(List<String> mobileNumbers) async {
+    // Show dialog with the list of phone numbers
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select a Phone Number'),
+          content: Container(
+            height: 400,
+            width: MediaQuery.sizeOf(context).width,
+            child: Column(
+              children: [
+                for (String number in mobileNumbers)
+                  ListTile(
+                    trailing: number.isNotEmpty
+                        ? GestureDetector(
+                            onTap: () {
+                              // Make the phone call
+                              _launchPhoneCall(number);
+                            },
+                            child: Icon(
+                              Icons.call,
+                              color: Colors.green,
+                            ),
+                          )
+                        : null, // Set to null if number is empty
+                    title: Text(number),
+                    onTap: () {
+                      // Close the dialog and make the phone call
+                      Navigator.pop(context);
+                      if (number.isNotEmpty) {
+                        _launchPhoneCall(number);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _launchPhoneCall(String mobileNumber) async {
     // Use 'tel:' scheme for making phone calls
     var url = 'tel:$mobileNumber';
 

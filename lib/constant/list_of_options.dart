@@ -219,87 +219,83 @@ List<String> typeEtireBuildOptions = [
 List<String> detailCommercialUsageOptions = ["Yes", "No"];
 
 List<String> infrastructueOptions = [
-    'good',
-    'bad',
-    'excellent',
-    'super',
-    'great'
-  ];
+  'good',
+  'bad',
+  'excellent',
+  'super',
+  'great'
+];
 
-  List<String> neighborhoodTypeoptionss = [
-    "Aristrocrat",
-    "Prime Residentaial",
-    "Prime Commercial",
-    "Prime Industrial",
-    "Good Residential",
-    "Good Commercial",
-    "Good Industrial",
-    "Average Residential",
-    "Average Commercial",
-    "Average Industrial",
-    "Red Light Area",
-    "Surrounded by Chawl",
-    "Below Average Residential",
-    "Below Average Commercial",
-    "Below Average Industrial",
-    "Industrial Commercial"
-  ];
+List<String> neighborhoodTypeoptionss = [
+  "Aristrocrat",
+  "Prime Residentaial",
+  "Prime Commercial",
+  "Prime Industrial",
+  "Good Residential",
+  "Good Commercial",
+  "Good Industrial",
+  "Average Residential",
+  "Average Commercial",
+  "Average Industrial",
+  "Red Light Area",
+  "Surrounded by Chawl",
+  "Below Average Residential",
+  "Below Average Commercial",
+  "Below Average Industrial",
+  "Industrial Commercial"
+];
 
-   List<String> zoneoptions = [
-    'Zone Certificate not provided',
-    'Agricultural Zone',
-    'No Development Zone',
-    'Commercial Zone',
-    'Industrail Zone',
-    'Green Zone',
-    'Residential Zone',
-    'High Density Zone',
-    'Low Density Zone',
-    'Urbanisable Zone',
-    'Institutional Zone',
-    'CRZ',
-    'Other Reservation'
-  ];
+List<String> zoneoptions = [
+  'Zone Certificate not provided',
+  'Agricultural Zone',
+  'No Development Zone',
+  'Commercial Zone',
+  'Industrail Zone',
+  'Green Zone',
+  'Residential Zone',
+  'High Density Zone',
+  'Low Density Zone',
+  'Urbanisable Zone',
+  'Institutional Zone',
+  'CRZ',
+  'Other Reservation'
+];
 
-  List<String> boundiresMatchingoptions = [
-    'Yes',
-    'No',
-    'Partly Matching',
-    'Documnet Not Provided',
-    'Details not mentioned in Documnet'
-  ];
+List<String> boundiresMatchingoptions = [
+  'Yes',
+  'No',
+  'Partly Matching',
+  'Documnet Not Provided',
+  'Details not mentioned in Documnet'
+];
 
-  List<String> propertOccupiedOptions = [
-    'Occupied',
-    'Partly Self Occupied-Partly Vacant',
-    'Partly Self Occupied-Partly Occupied by Tenant',
-    'Partly Tenant Occupied-Partly Vacant',
-    'Tenat Occupied',
-    'Under Construction',
-    'Renovation/Interior work in Progress',
-    'Occasionally Occupied by Applicant',
-    'Occasionally Occupied by Seller',
-    'Internal Visit Not Done',
-    'Internal Visit Not Allowed',
-    'Please Refer Remarks',
-    'Vacant',
-    'Self Occuied'
-  ];
+List<String> propertOccupiedOptions = [
+  'Occupied',
+  'Partly Self Occupied-Partly Vacant',
+  'Partly Self Occupied-Partly Occupied by Tenant',
+  'Partly Tenant Occupied-Partly Vacant',
+  'Tenat Occupied',
+  'Under Construction',
+  'Renovation/Interior work in Progress',
+  'Occasionally Occupied by Applicant',
+  'Occasionally Occupied by Seller',
+  'Internal Visit Not Done',
+  'Internal Visit Not Allowed',
+  'Please Refer Remarks',
+  'Vacant',
+  'Self Occuied'
+];
 
-  List<String> occupantRelationOptions = [
-    'Tenant',
-    'Seller',
-    'Self',
-    'Vacant',
-    'Under Construction',
-    'External Visit Done hence cannot Comment',
-    'Part self and part tenant',
-    'NA'
-  ];
+List<String> occupantRelationOptions = [
+  'Tenant',
+  'Seller',
+  'Self',
+  'Vacant',
+];
 
-  List<String> statusOptions = [
-    'Visit Done',
-    'Visit Failed',
-    'Partial Visit Done',
-    'Hold Application'
-  ];
+List<String> statusOptions = [
+  'Visit Done',
+  'Visit Failed',
+  'Partial Visit Done',
+  'Hold Application'
+];
