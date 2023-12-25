@@ -734,6 +734,7 @@ class _PhyscialInspection1Screen1State
                       height: 10,
                     ),
                     CustomRichText(
+                      isRequired: true,
                       mainText: 'Name of society board',
                     ),
                     SizedBox(
@@ -767,6 +768,7 @@ class _PhyscialInspection1Screen1State
                       height: 10,
                     ),
                     CustomRichText(
+                      isRequired: true,
                       mainText: 'Name of occupant',
                     ),
                     SizedBox(
@@ -823,6 +825,7 @@ class _PhyscialInspection1Screen1State
                       height: 10,
                     ),
                     CustomRichText(
+                      isRequired: true,
                       mainText: 'Compound wall and gates and security Average',
                     ),
                     SizedBox(
@@ -835,6 +838,7 @@ class _PhyscialInspection1Screen1State
                       height: 10,
                     ),
                     CustomRichText(
+                      isRequired: true,
                       mainText: 'Occupancy of Building',
                     ),
                     SizedBox(
@@ -854,7 +858,11 @@ class _PhyscialInspection1Screen1State
         child: NavigatorConatiner(),
         onTap: () async {
           try {
-            if (_distanceFromLandmarkRailwayController.text.isEmpty) {
+            if (_distanceFromLandmarkRailwayController.text.isEmpty &&
+                _societyNameController.text.isEmpty &&
+                _occupantNameController.text.isEmpty &&
+                _compoundWallandGatesController.text.isEmpty &&
+                _occupancyOfBuildingContoller.text.isEmpty) {
               // Show an error message if the landmark field is empty
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

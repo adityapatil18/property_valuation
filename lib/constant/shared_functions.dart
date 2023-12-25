@@ -12,6 +12,7 @@ class SharedPreferencesHelper {
   static const String authTokenKey = 'authToken';
   static const String userIds = "UserId";
   static const String ids = "id";
+  static const String isLoggedInKey = 'isLoggedIn';
 
   // Function to save the token to local storage
   Future<void> saveToken(String token) async {
@@ -25,6 +26,11 @@ class SharedPreferencesHelper {
     return prefs.getString(authTokenKey);
   }
 
+  static Future<void> clearUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(userIds);
+  }
+
   Future<void> saveUserId(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(userIds, userId);
@@ -33,6 +39,16 @@ class SharedPreferencesHelper {
   Future<String?> getUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(userIds);
+  }
+
+  static Future<void> saveLoginState(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(isLoggedInKey, isLoggedIn);
+  }
+
+  static Future<bool> getLoginState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(isLoggedInKey) ?? false;
   }
 
   Future<void> saveid(String id) async {

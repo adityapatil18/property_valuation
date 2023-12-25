@@ -26,6 +26,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    checkAndNavigate();
+  }
+
+  Future<void> checkAndNavigate() async {
+    bool isLoggedIn = await SharedPreferencesHelper.getLoginState();
+    if (isLoggedIn) {
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      if (userId != null && userId.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      }
+    }
+  }
 
   Future<void> login(String email, String password) async {
     email = email.trim();
@@ -79,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Saving the user ID to SharedPreferences
         await _sharedPreferencesHelper.saveUserId(userId);
-        await enginerVisitCaseList(userId);
+        // await enginerVisitCaseList(userId);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
         return userId;
@@ -92,30 +112,30 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> enginerVisitCaseList(String userId) async {
-    try {
-      Response response = await post(
-          Uri.parse(
-              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        print('Third API response: ${response.body}');
-        var data = responseData['data'];
-        print('User ID check : $data');
-        final enginerVisitCaseData =
-            EnginerVisitCaseData.fromJson(responseData);
+  // Future<void> enginerVisitCaseList(String userId) async {
+  //   try {
+  //     Response response = await post(
+  //         Uri.parse(
+  //             "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+  //         body: {"page": "1", "limit": "1", "search": "", "userID": userId});
+  //     if (response.statusCode == 200) {
+  //       var responseData = jsonDecode(response.body);
+  //       print('Third API response: ${response.body}');
+  //       var data = responseData['data'];
+  //       print('User ID check : $data');
+  //       final enginerVisitCaseData =
+  //           EnginerVisitCaseData.fromJson(responseData);
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      } else {
-        print(
-            'Failed to send userId to the third API. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending userId to the third API: $e');
-    }
-  }
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  //     } else {
+  //       print(
+  //           'Failed to send userId to the third API. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error sending userId to the third API: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -183,9 +203,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Color.fromARGB(1, 66, 75, 95).withOpacity(1),
                               // height: 60,
                               // width: MediaQuery.sizeOf(context).width,
+
                               child: TextField(
+                                style: TextStyle(color: Colors.white),
                                 controller: _userNameController,
                                 decoration: InputDecoration(
+                                    fillColor: Colors.white,
                                     hintText: 'Username',
                                     hintStyle: TextStyle(color: Colors.white),
                                     border: OutlineInputBorder(
@@ -219,6 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color:
                                   Color.fromARGB(1, 66, 75, 95).withOpacity(1),
                               child: TextField(
+                                style: TextStyle(color: Colors.white),
                                 controller: _passwordController,
                                 decoration: InputDecoration(
                                     hintText: 'Password',

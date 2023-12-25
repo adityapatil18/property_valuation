@@ -95,7 +95,6 @@ class _PhysicalInspection2Screen2State
   TextEditingController _door = TextEditingController();
   TextEditingController _propertyAge = TextEditingController();
   TextEditingController _maintainceLevel = TextEditingController();
-  TextEditingController _popertyACCValue = TextEditingController();
   TextEditingController _independentacess = TextEditingController();
   TextEditingController _selctConstructionPlan = TextEditingController();
   TextEditingController _commercialUsageDetails = TextEditingController();
@@ -131,7 +130,7 @@ class _PhysicalInspection2Screen2State
             "NoOfStoreys": _numberOfStoyires.text,
             "PropertyAge": _propertyAge.text,
             "ResidualAge": _residualAge.text,
-            "OccupancyStatus": _popertyACCValue.text,
+            "OccupancyStatus": "",
             "EngineerRemarks": _remark.text,
             "StageOfConstruction": null,
             "Detail_Text": null,
@@ -1096,23 +1095,7 @@ class _PhysicalInspection2Screen2State
                     SizedBox(
                       height: 10,
                     ),
-                    CustomRichText(
-                      mainText: 'Occupancy Level',
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    CustomDropdownSearch(
-                        items: propertyAccOptions,
-                        selectedItem: selectedPropertyAcc,
-                        onChanged: (value) {
-                          selectedPropertyAcc = value!;
-                          _popertyACCValue.text = value;
-                        },
-                        controller: _popertyACCValue),
-                    SizedBox(
-                      height: 10,
-                    ),
+
                     CustomRichText(
                       mainText:
                           'Is there poperty an independent unit has independent access',
@@ -1231,7 +1214,18 @@ class _PhysicalInspection2Screen2State
                     SizedBox(
                       height: 10,
                     ),
-                    CustomRichText(mainText: "Engineer Remark"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomRichText(mainText: "Engineer Remark"),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.green,
+                            ))
+                      ],
+                    ),
                     SizedBox(
                       height: 5,
                     ),
@@ -1291,7 +1285,6 @@ class _PhysicalInspection2Screen2State
             _door.clear();
             _propertyAge.clear();
             _maintainceLevel.clear();
-            _popertyACCValue.clear();
             _selctConstructionPlan.clear();
             _commercialUsageDetails.clear();
             _entireBldgType.clear();

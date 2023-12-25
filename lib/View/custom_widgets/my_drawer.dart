@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constant/shared_functions.dart';
 import '../Screens/about_us_screen.dart';
 import '../Screens/contact_us_screen.dart';
 import '../Screens/history_screen.dart';
@@ -14,6 +15,29 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SharedPreferencesHelper _sharedPreferencesHelper =
+        SharedPreferencesHelper();
+    Future<void> _logout(BuildContext context) async {
+      // Get the current user ID from SharedPreferences
+      String? userId = await _sharedPreferencesHelper.getUserId();
+
+      // Check if the user ID is not null before saving
+      if (userId != null) {
+        await _sharedPreferencesHelper.saveUserId(userId);
+      }
+
+      // Clear the login state
+      await SharedPreferencesHelper.saveLoginState(false);
+
+      // Navigate to the SignupScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+    }
+
     return Drawer(
       backgroundColor: Color.fromARGB(1, 66, 75, 95).withOpacity(1),
 
@@ -378,12 +402,7 @@ class MyDrawer extends StatelessWidget {
                               backgroundColor: MaterialStateProperty.all(
                                 Color(0xFF38C0CE),
                               )),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
+                          onPressed: () => _logout(context),
                           child: TextWidget(
                               text: 'Yes',
                               textcolor: Colors.white,

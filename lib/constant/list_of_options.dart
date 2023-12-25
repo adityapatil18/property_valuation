@@ -291,6 +291,12 @@ List<String> occupantRelationOptions = [
   'Seller',
   'Self',
   'Vacant',
+  "Relative Occupied",
+  'Occasionally Occupied',
+  "Under Construction",
+  'External Visit Done hence cannot Comment',
+  'Part self and part tenat',
+  'NA'
 ];
 
 List<String> statusOptions = [

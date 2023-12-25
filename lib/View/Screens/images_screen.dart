@@ -75,7 +75,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
   late ImagePicker _pickedMultipleImages;
   String pickedImageNameForDrawing = "";
   String captureImageNameForDrawing = "";
-  String pickedImageNameForElevation = "";
+  // String pickedImageNameForElevation = "";
   String captureImageNameForElevation = "";
   bool _isLoading = true;
 
@@ -219,24 +219,24 @@ class _ImagesScreenState extends State<ImagesScreen> {
     }
   }
 
-  Future<void> _pickImageForElevation() async {
-    XFile? pickedImage2 = await _imagePickerForElevation.pickImage(
-        source: ImageSource.gallery, imageQuality: 70);
-    if (pickedImage2 != null) {
-      DateTime imageDateTime = File(pickedImage2.path).lastModifiedSync();
+  // Future<void> _pickImageForElevation() async {
+  //   XFile? pickedImage2 = await _imagePickerForElevation.pickImage(
+  //       source: ImageSource.gallery, imageQuality: 70);
+  //   if (pickedImage2 != null) {
+  //     DateTime imageDateTime = File(pickedImage2.path).lastModifiedSync();
 
-      String formattedDateTime =
-          DateFormat.yMd().add_jm().format(imageDateTime);
-      setState(() {
-        _pickedImageForElevation = pickedImage2;
-        pickedImageNameForElevation = pickedImage2.name;
-        print(' name p e: $pickedImageNameForElevation');
+  //     String formattedDateTime =
+  //         DateFormat.yMd().add_jm().format(imageDateTime);
+  //     setState(() {
+  //       _pickedImageForElevation = pickedImage2;
+  //       pickedImageNameForElevation = pickedImage2.name;
+  //       print(' name p e: $pickedImageNameForElevation');
 
-        showSecondUIForElevation = true;
-        selectedImageDateTimeForElevation = formattedDateTime;
-      });
-    }
-  }
+  //       showSecondUIForElevation = true;
+  //       selectedImageDateTimeForElevation = formattedDateTime;
+  //     });
+  //   }
+  // }
 
   Future<void> _captureImageForElevation() async {
     XFile? capturedImage2 = await _imagePickerForElevation.pickImage(
@@ -469,7 +469,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
                       height: 10,
                     ),
                     Container(
-                      height: 250,
+                      height: 260,
                       width: MediaQuery.sizeOf(context).width,
                       child: DottedBorder(
                         color: Colors.black,
@@ -614,7 +614,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
                       height: 10,
                     ),
                     Container(
-                      height: 250,
+                      height: 260,
                       width: MediaQuery.sizeOf(context).width,
                       child: DottedBorder(
                         color: Colors.black,
@@ -627,17 +627,29 @@ class _ImagesScreenState extends State<ImagesScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Container(
-                                      height: MediaQuery.sizeOf(context).height,
-                                      width:
-                                          MediaQuery.sizeOf(context).width / 3,
-                                      child: _pickedImageForElevation != null
-                                          ? Image.file(
-                                              File(_pickedImageForElevation!
-                                                  .path),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Container(),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          height: 200,
+                                          width:
+                                              MediaQuery.sizeOf(context).width /
+                                                  3,
+                                          child: _pickedImageForElevation !=
+                                                  null
+                                              ? Image.file(
+                                                  File(_pickedImageForElevation!
+                                                      .path),
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Container(),
+                                        ),
+                                        Text(
+                                          '$selectedImageDateTimeForElevation',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
                                     ),
                                     Column(
                                       mainAxisAlignment:
@@ -660,7 +672,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
                                                     MaterialStateProperty.all(
                                                         Color(0xFF38C0CE))),
                                             onPressed: () {
-                                              _pickImageForElevation();
+                                              _captureImageForElevation();
                                             },
                                             child: Text(
                                               'Replace',
@@ -725,15 +737,15 @@ class _ImagesScreenState extends State<ImagesScreen> {
                                                 icon: Icon(Icons.camera),
                                                 label: Text("Capture Image"),
                                               ),
-                                              TextButton.icon(
-                                                onPressed: () {
-                                                  Navigator.pop(
-                                                      context); // Close the dialog
-                                                  _pickImageForElevation(); // Pick Image from Gallery
-                                                },
-                                                icon: Icon(Icons.photo),
-                                                label: Text("Pick Image"),
-                                              ),
+                                              // TextButton.icon(
+                                              //   onPressed: () {
+                                              //     Navigator.pop(
+                                              //         context); // Close the dialog
+                                              //     // _pickImageForElevation(); // Pick Image from Gallery
+                                              //   },
+                                              //   icon: Icon(Icons.photo),
+                                              //   label: Text("Pick Image"),
+                                              // ),
                                             ],
                                           );
                                         },

@@ -36,6 +36,7 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
   bool _isLoading = true;
   List<String> statusOption = statusOptions;
   String selctedStatusOption = "";
+  DateTime? selectedDateTime;
 
   Future<void> fetchData() async {
     try {
@@ -264,8 +265,11 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
                         items: statusOption,
                         selectedItem: selctedStatusOption,
                         onChanged: (value) {
-                          selctedStatusOption = value!;
-                          _status.text = value;
+                          setState(() {
+                            selctedStatusOption = value!;
+                            _status.text = value;
+                            selectedDateTime = DateTime.now();
+                          });
                         },
                         controller: _status),
                     SizedBox(
@@ -278,9 +282,23 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
                       height: 5,
                     ),
                     Container(
-                        height: 200,
-                        width: MediaQuery.sizeOf(context).width,
-                        child: CustomTextField(controller: _caseStatus)),
+                      height: 200,
+                      width: MediaQuery.sizeOf(context).width,
+                      child: TextField(
+                        // Display the selected item and its associated date and time
+                        controller: TextEditingController(
+                          text: selectedDateTime != null
+                              ? '$selctedStatusOption - ${_formatDateTime(selectedDateTime!)}'
+                              : null,
+                        ),
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1)),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -315,5 +333,12 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
         },
       ),
     );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    String period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    int hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+    return '${dateTime.month}-${dateTime.day}-${dateTime.year} $hour:$minute $period';
   }
 }

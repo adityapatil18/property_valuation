@@ -39,8 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String mobileNumber3 = "";
   String landLineNumber1 = '';
   String landLineNumber2 = '';
+  String appid = '';
 
-  String _id = "";
+  // String _id = "";
   String address = "";
   String abc = '';
   DateTime? dateOfVisit;
@@ -61,7 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Token is available, proceed with fetching additional data
         String? userId = await saveToken(token);
+        print('uid1:$userId');
+
         await enginerVisitCaseList(userId!);
+        print('uid:$userId');
         setState(() {
           _isLoading = false;
         });
@@ -75,25 +79,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> fetchData2() async {
-    try {
-      // Ensure you have the userId before calling enginerVisitCaseList
-      String? userId = await _sharedPreferencesHelper.getUserId();
-      if (userId != null) {
-        final String? _id = await enginerVisitCaseList2(userId);
+  // Future<void> fetchData2() async {
+  //   try {
+  //     // Ensure you have the userId before calling enginerVisitCaseList
+  //     String? userId = await _sharedPreferencesHelper.getUserId();
+  //     if (userId != null) {
+  //       final String? _id = await enginerVisitCaseList2(userId);
 
-        if (_id != null) {
-          await liveVisitbyId(_id);
-          print("live vist $_id");
-        }
-      } else {
-        print('User ID is null');
-      }
-    } catch (e) {
-      print('Error in fetchData: $e');
-      // Handle errors
-    }
-  }
+  //       if (_id != null) {
+  //         await liveVisitbyId(_id);
+  //         print("live vist $_id");
+  //       }
+  //     } else {
+  //       print('User ID is null');
+  //     }
+  //   } catch (e) {
+  //     print('Error in fetchData: $e');
+  //     // Handle errors
+  //   }
+  // }
 
   Future<String?> saveToken(String token) async {
     try {
@@ -125,11 +129,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> enginerVisitCaseList(String userId) async {
     try {
       print('step3');
+      print('userid:$userId');
 
       Response response = await post(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+          body: {"page": "1", "limit": "1", "search": "", "userID": userId});
       if (response.statusCode == 200) {
         print('step 4');
 
@@ -156,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mobileNumber = enginerVisitCaseData.data.dataarray[0].mobileNo1;
           print('abc:$abc');
           dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
+          appid = enginerVisitCaseData.data.dataarray[0].appId;
           // specialInstruction=enginerVisitCaseData.data.dataarray[0].
           print('Data updated successfully');
         });
@@ -171,33 +177,33 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<String?> enginerVisitCaseList2(String userId) async {
-    try {
-      Response response = await post(
-          Uri.parse(
-              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        final enginerVisitCaseData =
-            EnginerVisitCaseData.fromJson(responseData);
-        _id = enginerVisitCaseData.data.dataarray[0].id;
-        print("api respnse for responsedata::${responseData}");
-        print('_id===>$_id');
-        await _sharedPreferencesHelper.saveid(_id);
+  // Future<String?> enginerVisitCaseList2(String userId) async {
+  //   try {
+  //     Response response = await post(
+  //         Uri.parse(
+  //             "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+  //         body: {"page": "1", "limit": "2", "search": "", "userID": userId});
+  //     if (response.statusCode == 200) {
+  //       var responseData = jsonDecode(response.body);
+  //       final enginerVisitCaseData =
+  //           EnginerVisitCaseData.fromJson(responseData);
+  //       _id = enginerVisitCaseData.data.dataarray[0].id;
+  //       print("api respnse for responsedata::${responseData}");
+  //       print('_id===>$_id');
+  //       await _sharedPreferencesHelper.saveid(_id);
 
-        return enginerVisitCaseData.data.dataarray[0].id;
-      } else {
-        print(
-            'Failed to send userId to the third API. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending userId to the third API: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('An error occurred while fetching data.'),
-      ));
-    }
-  }
+  //       return enginerVisitCaseData.data.dataarray[0].id;
+  //     } else {
+  //       print(
+  //           'Failed to send userId to the third API. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error sending userId to the third API: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('An error occurred while fetching data.'),
+  //     ));
+  //   }
+  // }
 
   Future<void> liveVisitbyId(String _id) async {
     print("Debug: liveVisitbyId - _id: $_id");
@@ -212,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           final jsonData = jsonDecode(response.body);
           final liveVisitData = LiveVisitData.fromJson(jsonData);
+
           print('liveVisitbyId data response: $jsonData');
           print("livevistsidat::$liveVisitData");
           final abcd = liveVisitData.data.mobileNo1;
@@ -234,19 +241,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _initializeData() async {
-    try {
-      // Assuming that _id is already set by fetchData
-      await liveVisitbyId(_id);
-      // Additional initialization or data loading if needed
-
-      // Now you can proceed with any other code that depends on the data
-    } catch (e) {
-      print('Error initializing data: $e');
-      // Handle the error according to your application's requirements
-    }
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -254,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       fetchData();
       // _initializeData();
-      fetchData2();
+      // fetchData2();
     });
   }
 
@@ -391,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Colors.red,
                                         ),
                                         TextWidget(
-                                            text: 'LP-8',
+                                            text: appid,
                                             textcolor: Color(0xFF38C0CE),
                                             textsize: 14,
                                             textweight: FontWeight.w500)
