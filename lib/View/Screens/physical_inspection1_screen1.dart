@@ -106,12 +106,34 @@ class _PhyscialInspection1Screen1State
   TextEditingController _compoundWallandGatesController =
       TextEditingController();
   TextEditingController _occupancyOfBuildingContoller = TextEditingController();
+  String? _currentSpecificId;
+
+  @override
+  void initState() {
+    super.initState();
+    // updateLiveVisit();
+    // Call loadData when the state is initialized
+
+    loadData();
+    _loadCurrentSpecificId();
+  }
+
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
+    }
+  }
 
   Future<void> updateLiveVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     print('2');
 
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     print("id is:$id");
 
     try {
@@ -200,15 +222,6 @@ class _PhyscialInspection1Screen1State
     setState(() {
       _isLoading = false;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    updateLiveVisit();
-    // Call loadData when the state is initialized
-
-    loadData();
   }
 
   @override
@@ -866,8 +879,7 @@ class _PhyscialInspection1Screen1State
               // Show an error message if the landmark field is empty
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                      'Please provide a value for the Distance from Landmark/Railway Station field.'),
+                  content: Text('Add required fields'),
                   duration: Duration(seconds: 2),
                 ),
               );

@@ -40,6 +40,25 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
   TextEditingController _areaC = TextEditingController();
 
   List<Map<String, String>> _selectedCategories = [];
+  String? _currentSpecificId;
+  @override
+  void initState() {
+    super.initState();
+    // Call loadData when the state is initialized
+    loadData();
+    _loadCurrentSpecificId();
+  }
+
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
+    }
+  }
 
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,7 +66,7 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     print('2');
 
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     print("id is:$id");
 
     try {
@@ -142,13 +161,6 @@ class _MMSheetsScreenState extends State<MMSheetsScreen> {
     setState(() {
       _isLoading = false;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Call loadData when the state is initialized
-    loadData();
   }
 
   @override

@@ -78,6 +78,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
   // String pickedImageNameForElevation = "";
   String captureImageNameForElevation = "";
   bool _isLoading = true;
+  String? _currentSpecificId;
 
   @override
   void initState() {
@@ -86,6 +87,18 @@ class _ImagesScreenState extends State<ImagesScreen> {
     _imagePickerForElevation = ImagePicker();
     _pickedMultipleImages = ImagePicker();
     loadData();
+    _loadCurrentSpecificId();
+  }
+
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
+    }
   }
 
   Future<Map<String, dynamic>?> makeApiCall(File imageFile) async {
@@ -124,7 +137,7 @@ class _ImagesScreenState extends State<ImagesScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     print('2');
 
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     print("id is:$id");
 
     try {

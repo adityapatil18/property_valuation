@@ -40,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String landLineNumber1 = '';
   String landLineNumber2 = '';
   String appid = '';
-
-  // String _id = "";
+  late String abcd;
+  String _id = "";
   String address = "";
   String abc = '';
   DateTime? dateOfVisit;
@@ -52,6 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCaseStatus = "";
   TextEditingController _caseStaus = TextEditingController();
   TextEditingController _selectedDateTimewithCase = TextEditingController();
+  List<Dataarray> enginerVisitCases = [];
+
   Future<void> fetchData() async {
     try {
       // Retrieve the token from shared preferences
@@ -79,25 +81,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Future<void> fetchData2() async {
-  //   try {
-  //     // Ensure you have the userId before calling enginerVisitCaseList
-  //     String? userId = await _sharedPreferencesHelper.getUserId();
-  //     if (userId != null) {
-  //       final String? _id = await enginerVisitCaseList2(userId);
+  Future<void> fetchData2() async {
+    try {
+      // Ensure you have the userId before calling enginerVisitCaseList
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      if (userId != null) {
+        final String? _id = await enginerVisitCaseList2(userId);
 
-  //       if (_id != null) {
-  //         await liveVisitbyId(_id);
-  //         print("live vist $_id");
-  //       }
-  //     } else {
-  //       print('User ID is null');
-  //     }
-  //   } catch (e) {
-  //     print('Error in fetchData: $e');
-  //     // Handle errors
-  //   }
-  // }
+        if (_id != null) {
+          await liveVisitbyId(_id);
+          print("live vist $_id");
+        }
+      } else {
+        print('User ID is null');
+      }
+    } catch (e) {
+      print('Error in fetchData: $e');
+      // Handle errors
+    }
+  }
 
   Future<String?> saveToken(String token) async {
     try {
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Response response = await post(
           Uri.parse(
               "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-          body: {"page": "1", "limit": "1", "search": "", "userID": userId});
+          body: {"page": "1", "limit": "20", "search": "", "userID": userId});
       if (response.statusCode == 200) {
         print('step 4');
 
@@ -143,26 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
             EnginerVisitCaseData.fromJson(responseData);
 
         setState(() {
-          // final ids = enginerVisitCaseData.data.dataarray[0].id;
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => TechInitiationScreen(),
-          //     ));
-          locationName =
-              enginerVisitCaseData.data.dataarray[0].locationData[0].name;
-          borrowerName = enginerVisitCaseData.data.dataarray[0].borrowerName;
-          address = enginerVisitCaseData.data.dataarray[0].addressofProperty;
-          instituteName = enginerVisitCaseData
-              .data.dataarray[0].manageInstitute[0].maininstitutiondata[0].name;
-          dateOfVisit =
-              enginerVisitCaseData.data.dataarray[0].visitScheduledDate;
-          // final abc = dateOfVisit!.toLocal().toString().substring(0, 10);
-          mobileNumber = enginerVisitCaseData.data.dataarray[0].mobileNo1;
-          print('abc:$abc');
-          dateOfReschedule = enginerVisitCaseData.data.dataarray[0].requestDate;
-          appid = enginerVisitCaseData.data.dataarray[0].appId;
-          // specialInstruction=enginerVisitCaseData.data.dataarray[0].
+          enginerVisitCases = enginerVisitCaseData.data.dataarray;
+
           print('Data updated successfully');
         });
       } else {
@@ -177,33 +161,33 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Future<String?> enginerVisitCaseList2(String userId) async {
-  //   try {
-  //     Response response = await post(
-  //         Uri.parse(
-  //             "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-  //         body: {"page": "1", "limit": "2", "search": "", "userID": userId});
-  //     if (response.statusCode == 200) {
-  //       var responseData = jsonDecode(response.body);
-  //       final enginerVisitCaseData =
-  //           EnginerVisitCaseData.fromJson(responseData);
-  //       _id = enginerVisitCaseData.data.dataarray[0].id;
-  //       print("api respnse for responsedata::${responseData}");
-  //       print('_id===>$_id');
-  //       await _sharedPreferencesHelper.saveid(_id);
+  Future<String?> enginerVisitCaseList2(String userId) async {
+    try {
+      Response response = await post(
+          Uri.parse(
+              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
+          body: {"page": "1", "limit": "20", "search": "", "userID": userId});
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        final enginerVisitCaseData =
+            EnginerVisitCaseData.fromJson(responseData);
+        _id = enginerVisitCaseData.data.dataarray[0].id;
+        print("api respnse for responsedata::${responseData}");
+        print('_id===>$_id');
+        await _sharedPreferencesHelper.saveid(_id);
 
-  //       return enginerVisitCaseData.data.dataarray[0].id;
-  //     } else {
-  //       print(
-  //           'Failed to send userId to the third API. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error sending userId to the third API: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text('An error occurred while fetching data.'),
-  //     ));
-  //   }
-  // }
+        return enginerVisitCaseData.data.dataarray[0].id;
+      } else {
+        print(
+            'Failed to send userId to the third API. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending userId to the third API: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('An error occurred while fetching data.'),
+      ));
+    }
+  }
 
   Future<void> liveVisitbyId(String _id) async {
     print("Debug: liveVisitbyId - _id: $_id");
@@ -248,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       fetchData();
       // _initializeData();
-      // fetchData2();
+      fetchData2();
     });
   }
 
@@ -318,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: ListView(
+                  child: Column(
                     children: [
                       SizedBox(
                         height: 20,
@@ -363,260 +347,331 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        height: 320,
-                        width: MediaQuery.sizeOf(context).width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.flag,
-                                          color: Colors.red,
-                                        ),
-                                        TextWidget(
-                                            text: appid,
-                                            textcolor: Color(0xFF38C0CE),
-                                            textsize: 14,
-                                            textweight: FontWeight.w500)
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Clipboard.setData(
-                                                    const ClipboardData(
-                                                        text: "LP-8"))
-                                                .then((_) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          'Copied to your clipboard !')));
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.copy,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TechInitiationScreen()));
-                                          },
-                                          icon: Icon(
-                                            Icons.edit,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Padding(
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: enginerVisitCases.length,
+                          itemBuilder: (context, index) {
+                            print('xcdvd ${enginerVisitCases.length}');
+                            Dataarray currentCase = enginerVisitCases[index];
+                            abcd = currentCase.appId; // Non-constant value
+
+                            return Column(
+                              children: [
+                                Container(
+                                  height: 320,
+                                  width: MediaQuery.sizeOf(context).width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        TextWidget(
-                                            text: 'Location Name:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Borrower Name:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Institute Name:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Contact Person:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Address:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Date of visit:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Date of Reschedule:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
-                                        TextWidget(
-                                            text: 'Special Instruction:',
-                                            textcolor: Colors.grey,
-                                            textsize: 15,
-                                            textweight: FontWeight.w400),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.flag,
+                                                    color: Colors.red,
+                                                  ),
+                                                  TextWidget(
+                                                      text: currentCase.appId,
+                                                      textcolor:
+                                                          Color(0xFF38C0CE),
+                                                      textsize: 14,
+                                                      textweight:
+                                                          FontWeight.w500)
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text:
+                                                                      'dummy'))
+                                                          .then((_) {
+                                                        Clipboard.setData(
+                                                                ClipboardData(
+                                                                    text: currentCase
+                                                                        .appId))
+                                                            .then((_) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Copied to your clipboard! '),
+                                                            ),
+                                                          );
+                                                        });
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.copy,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  TechInitiationScreen(
+                                                                    specificId:
+                                                                        currentCase
+                                                                            .id,
+                                                                  )));
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.edit,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextWidget(
+                                                      text: 'Location Name:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text: 'Borrower Name:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text: 'Institute Name:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text: 'Contact Person:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text: 'Address:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text: 'Date of visit:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text:
+                                                          'Date of Reschedule:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                  TextWidget(
+                                                      text:
+                                                          'Special Instruction:',
+                                                      textcolor: Colors.grey,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w400),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextWidget(
+                                                      text: currentCase
+                                                          .locationData[0].name,
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text: currentCase
+                                                          .borrowerName,
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text: currentCase
+                                                          .manageInstitute[0]
+                                                          .maininstitutiondata[
+                                                              0]
+                                                          .name,
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text: '',
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text: currentCase
+                                                          .addressofProperty,
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text:
+                                                          '${currentCase.visitScheduledDate.toLocal().toString().substring(0, 10)}',
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text:
+                                                          '${currentCase.requestDate.toLocal().toString().substring(0, 10)}',
+                                                      textcolor: Colors.black,
+                                                      textsize: 15,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                  TextWidget(
+                                                      text: currentCase.id,
+                                                      textcolor: Colors.black,
+                                                      textsize: 12,
+                                                      textweight:
+                                                          FontWeight.w500),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            GestureDetector(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                height: 30,
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.orange,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: TextWidget(
+                                                    text: 'Case Status Update',
+                                                    textcolor: Colors.white,
+                                                    textsize: 12,
+                                                    textweight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onTap: () {
+                                                setState(() {
+                                                  showUpdateCaseStatus(context);
+                                                });
+                                              },
+                                            ),
+                                            GestureDetector(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                height: 30,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.purple),
+                                                child: TextWidget(
+                                                    text: 'Schedule',
+                                                    textcolor: Colors.white,
+                                                    textsize: 12,
+                                                    textweight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onTap: () {
+                                                showschedule(context);
+                                                // resetValues();
+                                              },
+                                            ),
+                                            GestureDetector(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                height: 30,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(
+                                                      255, 82, 187, 86),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: TextWidget(
+                                                  text: 'Call',
+                                                  textcolor: Colors.white,
+                                                  textsize: 12,
+                                                  textweight: FontWeight.w800,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                // Replace 'yourListOfMobileNumbers' with the actual list of mobile numbers
+                                                List<String>
+                                                    yourListOfMobileNumbers = [
+                                                  mobileNumber1,
+                                                  mobileNumber2,
+                                                  mobileNumber3,
+                                                  landLineNumber1,
+                                                  landLineNumber2,
+                                                ];
+                                                _makePhoneCall(
+                                                    yourListOfMobileNumbers);
+                                              },
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextWidget(
-                                            text: '$locationName',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text: '$borrowerName',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text: '$instituteName',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text: '',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text: '${address}',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text:
-                                                '${dateOfVisit?.toLocal().toString().substring(0, 10)}',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text:
-                                                '${dateOfReschedule?.toLocal().toString().substring(0, 10)}',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                        TextWidget(
-                                            text: '',
-                                            textcolor: Colors.black,
-                                            textsize: 15,
-                                            textweight: FontWeight.w500),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: TextWidget(
-                                          text: 'Case Status Update',
-                                          textcolor: Colors.white,
-                                          textsize: 12,
-                                          textweight: FontWeight.w800),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        showUpdateCaseStatus(context);
-                                      });
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.purple),
-                                      child: TextWidget(
-                                          text: 'Schedule',
-                                          textcolor: Colors.white,
-                                          textsize: 12,
-                                          textweight: FontWeight.w800),
-                                    ),
-                                    onTap: () {
-                                      showschedule(context);
-                                      // resetValues();
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 82, 187, 86),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: TextWidget(
-                                        text: 'Call',
-                                        textcolor: Colors.white,
-                                        textsize: 12,
-                                        textweight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      // Replace 'yourListOfMobileNumbers' with the actual list of mobile numbers
-                                      List<String> yourListOfMobileNumbers = [
-                                        mobileNumber1,
-                                        mobileNumber2,
-                                        mobileNumber3,
-                                        landLineNumber1,
-                                        landLineNumber2,
-                                      ];
-                                      _makePhoneCall(yourListOfMobileNumbers);
-                                    },
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                )
+                              ],
+                            );
+                          },
                         ),
                       )
                     ],

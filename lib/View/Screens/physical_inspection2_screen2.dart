@@ -105,13 +105,37 @@ class _PhysicalInspection2Screen2State
   TextEditingController _remark = TextEditingController();
   List<PropertyListData> propertyOptions1 = [];
   List<PropertyListData> propertyOptions2 = [];
+  List<String> _additionalTexts = [];
+  String? _currentSpecificId;
 
   PropertyListData? selcetedOption1;
   PropertyListData? selcetedOption2;
 
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      fetchPropertyOptions();
+    });
+    loadData();
+    _loadCurrentSpecificId();
+  }
+
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
+    }
+  }
+
   Future<void> updateLiveVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     print("id is:$id");
 
     try {
@@ -242,16 +266,6 @@ class _PhysicalInspection2Screen2State
     setState(() {
       _isLoading = false;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      fetchPropertyOptions();
-    });
-    loadData();
   }
 
   @override
@@ -1219,7 +1233,11 @@ class _PhysicalInspection2Screen2State
                       children: [
                         CustomRichText(mainText: "Engineer Remark"),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                _additionalTexts.add('');
+                              });
+                            },
                             icon: Icon(
                               Icons.add,
                               color: Colors.green,
@@ -1229,7 +1247,7 @@ class _PhysicalInspection2Screen2State
                     SizedBox(
                       height: 5,
                     ),
-                    CustomTextField(controller: _remark)
+                    CustomTextField(controller: _remark),
                   ],
                 ),
               ),

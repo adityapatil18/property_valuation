@@ -16,6 +16,7 @@ import 'package:property_valuation/View/custom_widgets/richtext_widget.dart';
 import 'package:property_valuation/View/custom_widgets/selction_textfeild_widget.dart';
 import 'package:property_valuation/View/custom_widgets/textfield_widget.dart';
 import 'package:property_valuation/model/live_visit_data_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constant/shared_functions.dart';
 import '../../model/enginer_visit_case_model.dart';
@@ -24,7 +25,8 @@ import '../../model/location_popup_model.dart';
 import '../custom_widgets/text_widgets.dart';
 
 class TechInitiationScreen extends StatefulWidget {
-  const TechInitiationScreen({super.key});
+  final String? specificId;
+  const TechInitiationScreen({super.key, this.specificId});
 
   @override
   State<TechInitiationScreen> createState() => _TechInitiationScreenState();
@@ -66,70 +68,51 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
   LoanType? loanTypeData;
   String? loanTypeName;
   bool isLoading = true;
-
   final SharedPreferencesHelper _sharedPreferencesHelper =
       SharedPreferencesHelper();
+  String? _currentSpecificId;
 
   Future<void> fetchData() async {
     try {
-      // Ensure you have the userId before calling enginerVisitCaseList
-      String? userId = await _sharedPreferencesHelper.getUserId();
-      if (userId != null) {
-        final String? _id = await enginerVisitCaseList(userId);
+      final _currentSpecificId = widget.specificId;
 
-        if (_id != null) {
-          await liveVisitbyId(_id);
-          print("live vist $_id");
-
-          // Update UI or perform any other actions based on 'liveVisitbyId' data
-          setState(() {
-            isLoading = false;
-          });
-          await updateLiveVisit(_id);
-        }
-      } else {
-        print('User ID is null');
+      if (_currentSpecificId != null) {
+        await liveVisitbyId(_currentSpecificId);
       }
+
+      // ... rest of the fetchData method
     } catch (e) {
       print('Error in fetchData: $e');
-      // Handle errors
     }
   }
 
-  Future<String?> enginerVisitCaseList(String userId) async {
-    try {
-      Response response = await post(
-          Uri.parse(
-              "https://apivaluation.techgigs.in/admin/livevisit/get-EngineerVisitCase_list"),
-          body: {"page": "1", "limit": "2", "search": "", "userID": userId});
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        final enginerVisitCaseData =
-            EnginerVisitCaseData.fromJson(responseData);
-        _id = enginerVisitCaseData.data.dataarray[0].id;
-        print("api respnse for responsedata::${responseData}");
-        print('_id===>$_id');
-        await _sharedPreferencesHelper.saveid(_id);
+  // Save _currentSpecificId to SharedPreferences
+  Future<void> _saveCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('currentSpecificId', _currentSpecificId!);
+  }
 
-        return enginerVisitCaseData.data.dataarray[0].id;
-      } else {
-        print(
-            'Failed to send userId to the third API. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending userId to the third API: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('An error occurred while fetching data.'),
-      ));
+  // Load _currentSpecificId from SharedPreferences
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
     }
   }
 
-  Future<void> liveVisitbyId(String _id) async {
-    print("Debug: liveVisitbyId - _id: $_id"); // Add this debug print
+  Future<void> liveVisitbyId(String) async {
+    print(
+        "Debug: liveVisitbyId - _id: $_currentSpecificId"); // Add this debug print
 
     try {
+      _saveCurrentSpecificId();
+
       Response response = await get(Uri.parse(
-          'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$_id'));
+          'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$_currentSpecificId'));
       if (response.statusCode == 200) {
         setState(() {
           final jsonData = jsonDecode(response.body);
@@ -139,10 +122,11 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
           _instituteType.text = liveVisitData.data.institutionType!;
           _instituteName.text = liveVisitData.data.maininstitutionname!;
           __insituteBranch.text = liveVisitData.data.manageInstitutename!;
-          String formmatedRequestDate =
+
+          final formmatedRequestDate =
               DateFormat('yyyy-MM-dd').format(liveVisitData.data.requestDate);
           _dateofrequest.text = formmatedRequestDate;
-          String formmatedVisitDate = DateFormat('yyyy-MM-dd')
+          final formmatedVisitDate = DateFormat('yyyy-MM-dd')
               .format(liveVisitData.data.visitScheduledDate);
           _dateofvisit.text = formmatedVisitDate;
           _nameOfApplicant.text = liveVisitData.data.borrowerName!;
@@ -163,7 +147,16 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     }
   }
 
-  Future<void> updateLiveVisit(String id) async {
+  void updateSpecificId(String newSpecificId) {
+    setState(() {
+      _currentSpecificId = newSpecificId;
+
+      // Save updated _currentSpecificId to SharedPreferences
+      _saveCurrentSpecificId();
+    });
+  }
+
+  Future<void> updateLiveVisit(String _currentSpecificId) async {
     try {
       String locationId = selectedLocation?.id ?? "";
 
@@ -171,7 +164,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
         Uri.parse(
             "https://apivaluation.techgigs.in/admin/livevisit/update_one_livevisit"),
         body: {
-          "id": id,
+          "id": _currentSpecificId,
           "CTSSurveyNo": _cts.text,
           "wardname": _wardName.text,
           "flatUnitNo": _flatNo.text,
@@ -195,10 +188,8 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
 
         // Check the response and handle accordingly
         if (responseData['status'] == 'LiveVisit updated Successfully') {
+          print(responseData);
           print("Data updated successfully!");
-        } else {
-          print(
-              "Failed to update data. Server response: ${responseData['status']}");
         }
       } else {
         print("Failed to update data. Status code: ${response.statusCode}");
@@ -261,13 +252,26 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     }
   }
 
+  Future<void> loadData() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
+      _currentSpecificId = widget.specificId;
       fetchData();
     });
+    _loadCurrentSpecificId();
+
     fetchLocationOptions().then((options) {
       setState(() {
         locationOptions = options;
@@ -277,6 +281,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
     });
 
     fetchLoanTypeDetails();
+    loadData();
   }
 
   @override
@@ -753,7 +758,7 @@ class _TechInitiationScreenState extends State<TechInitiationScreen> {
                 return; // Exit the method without updating if the landmark field is empty
               }
 
-              await updateLiveVisit(_id);
+              await updateLiveVisit(_currentSpecificId!);
 
               // If the update is successful, navigate to the next screen
               Navigator.push(

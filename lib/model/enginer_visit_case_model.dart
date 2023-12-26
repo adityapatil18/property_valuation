@@ -70,6 +70,7 @@ class Dataarray {
   String principalvaluerId;
   String visitstatus;
   String reportStatusBy;
+  String? splInstruction;
   List<ManageInstitute> manageInstitute;
   List<UserDatum> userData;
   List<LoanData> loanData;
@@ -89,6 +90,7 @@ class Dataarray {
     required this.principalvaluerId,
     required this.visitstatus,
     required this.reportStatusBy,
+    required this.splInstruction,
     required this.manageInstitute,
     required this.userData,
     required this.loanData,
@@ -109,6 +111,7 @@ class Dataarray {
         principalvaluerId: json["principalvaluerId"],
         visitstatus: json["visitstatus"],
         reportStatusBy: json["report_status_by"],
+        splInstruction: json["splInstruction"],
         manageInstitute: List<ManageInstitute>.from(
             json["ManageInstitute"].map((x) => ManageInstitute.fromJson(x))),
         userData: List<UserDatum>.from(
@@ -135,6 +138,7 @@ class Dataarray {
         "principalvaluerId": principalvaluerId,
         "visitstatus": visitstatus,
         "report_status_by": reportStatusBy,
+        "splInstruction": splInstruction,
         "ManageInstitute":
             List<dynamic>.from(manageInstitute.map((x) => x.toJson())),
         "userData": List<dynamic>.from(userData.map((x) => x.toJson())),

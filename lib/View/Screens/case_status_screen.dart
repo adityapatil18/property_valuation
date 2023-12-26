@@ -37,22 +37,25 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
   List<String> statusOption = statusOptions;
   String selctedStatusOption = "";
   DateTime? selectedDateTime;
+  String? _currentSpecificId;
 
-  Future<void> fetchData() async {
-    try {
-      if (_id != null) {
-        await liveVisitbyId(_id);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+    updateLiveVisit();
+    _loadCurrentSpecificId();
+  }
 
-        // Update UI or perform any other actions based on 'liveVisitbyId' data
-        setState(() {
-          _isLoading = false;
-        });
-      } else {
-        print('User ID is null');
-      }
-    } catch (e) {
-      print('Error in fetchData: $e');
-      // Handle errors
+  Future<void> _loadCurrentSpecificId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedSpecificId = prefs.getString('currentSpecificId');
+    if (savedSpecificId != null) {
+      setState(() {
+        _currentSpecificId = savedSpecificId;
+        print('Loaded Specific ID: $_currentSpecificId');
+      });
     }
   }
 
@@ -60,7 +63,7 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     print('2');
 
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     try {
       Response response = await get(Uri.parse(
           'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$id'));
@@ -83,7 +86,7 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
 
   Future<void> updateLiveVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? id = prefs.getString("id");
+    final String? id = prefs.getString("currentSpecificId");
     print("id is:$id");
 
     try {
@@ -115,11 +118,14 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchData();
+  Future<void> loadData() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -269,6 +275,8 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
                             selctedStatusOption = value!;
                             _status.text = value;
                             selectedDateTime = DateTime.now();
+                            _caseStatus.text =
+                                '$selctedStatusOption - ${_formatDateTime(selectedDateTime!)}';
                           });
                         },
                         controller: _status),
@@ -281,24 +289,10 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    Container(
-                      height: 200,
-                      width: MediaQuery.sizeOf(context).width,
-                      child: TextField(
-                        // Display the selected item and its associated date and time
-                        controller: TextEditingController(
-                          text: selectedDateTime != null
-                              ? '$selctedStatusOption - ${_formatDateTime(selectedDateTime!)}'
-                              : null,
-                        ),
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 1)),
-                        ),
-                      ),
-                    ),
+                    CustomTextField(
+                      controller: _caseStatus,
+                      readOnly: true,
+                    )
                   ],
                 ),
               ),
