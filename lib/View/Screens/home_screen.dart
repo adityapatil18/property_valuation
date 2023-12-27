@@ -12,6 +12,7 @@ import 'package:property_valuation/View/custom_widgets/loading_indicator.dart';
 import 'package:property_valuation/View/custom_widgets/my_drawer.dart';
 import 'package:property_valuation/View/custom_widgets/text_widgets.dart';
 import 'package:property_valuation/constant/list_of_options.dart';
+import 'package:property_valuation/model/monthly_alloc_modal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/shared_functions.dart';
@@ -40,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String landLineNumber1 = '';
   String landLineNumber2 = '';
   String appid = '';
+  var monthlyCount;
+  var todayCount;
   late String abcd;
   String _id = "";
   String address = "";
@@ -87,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
       String? userId = await _sharedPreferencesHelper.getUserId();
       if (userId != null) {
         final String? _id = await enginerVisitCaseList2(userId);
-
         if (_id != null) {
           await liveVisitbyId(_id);
           print("live vist $_id");
@@ -108,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: {"token": token});
       if (response2.statusCode == 200) {
         var responseData = jsonDecode(response2.body);
-        print('Second API response: ${response2.body}');
+        // print('Second API response: ${response2.body}');
         // Process the response from the second API if needed
         // Extracting user ID from the response
         var userId = responseData['data']['id'];
@@ -125,6 +127,78 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       print('Error sending token to the second API: $e');
+    }
+  }
+
+  Future<void> monthlyAlloc() async {
+    try {
+      // Retrieve the user ID from SharedPreferences
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      print('user idddd:$userId');
+
+      if (userId != null) {
+        Response response = await post(
+          Uri.parse(
+            "https://apivaluation.techgigs.in/admin/livevisit/EngineerAllocationforthemonth",
+          ),
+          body: {"userID": userId},
+        );
+
+        if (response.statusCode == 200) {
+          var responseData = jsonDecode(response.body);
+          print(
+              'API response motnhly: $responseData'); // Print the entire API response
+          monthlyCount = responseData['data']?['count'];
+          print('count is:$monthlyCount');
+        } else {
+          print(
+            'Failed to get the count. Status code: ${response.statusCode}',
+          );
+          // Handle error cases or show a message to the user
+        }
+      } else {
+        print('User ID is null');
+        // Handle the case where the user ID is null
+      }
+    } catch (e) {
+      print('Error in monthly alloc: $e');
+      // Handle errors
+    }
+  }
+
+  Future<void> todayAlloc() async {
+    try {
+      // Retrieve the user ID from SharedPreferences
+      String? userId = await _sharedPreferencesHelper.getUserId();
+      print('user idddd:$userId');
+
+      if (userId != null) {
+        Response response = await post(
+          Uri.parse(
+            "https://apivaluation.techgigs.in/admin/livevisit/EngineerTotalAllocationToday",
+          ),
+          body: {"userID": userId},
+        );
+
+        if (response.statusCode == 200) {
+          var responseData = jsonDecode(response.body);
+          print(
+              'API response motnhly: $responseData'); // Print the entire API response
+          todayCount = responseData['data']?['count'];
+          print('count is:$todayCount');
+        } else {
+          print(
+            'Failed to get the count. Status code: ${response.statusCode}',
+          );
+          // Handle error cases or show a message to the user
+        }
+      } else {
+        print('User ID is null');
+        // Handle the case where the user ID is null
+      }
+    } catch (e) {
+      print('Error in todayCount alloc: $e');
+      // Handle errors
     }
   }
 
@@ -174,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _id = enginerVisitCaseData.data.dataarray[0].id;
         print("api respnse for responsedata::${responseData}");
         print('_id===>$_id');
-        await _sharedPreferencesHelper.saveid(_id);
+        // await _sharedPreferencesHelper.saveid(_id);
 
         return enginerVisitCaseData.data.dataarray[0].id;
       } else {
@@ -233,6 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
       fetchData();
       // _initializeData();
       fetchData2();
+      monthlyAlloc();
     });
   }
 
@@ -312,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           CustomCricleWidget(
                               labelText: 'Monthly Alloc.',
-                              value: '0',
+                              value: monthlyCount.toString(),
                               containerColor: Color(0xFF38C0CE)),
                           CustomCricleWidget(
                               labelText: 'Case Done',
@@ -332,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           CustomCricleWidget(
                               labelText: "Today's Alloc.",
-                              value: '0',
+                              value: "0",
                               containerColor: Colors.lightBlue),
                           CustomCricleWidget(
                               labelText: 'Spill Cases',

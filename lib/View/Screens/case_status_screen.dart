@@ -46,6 +46,7 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
     loadData();
     updateLiveVisit();
     _loadCurrentSpecificId();
+    liveVisitbyId();
   }
 
   Future<void> _loadCurrentSpecificId() async {
@@ -59,11 +60,12 @@ class _CaseStatusScreenState extends State<CaseStatusScreen> {
     }
   }
 
-  Future<void> liveVisitbyId(String id) async {
+  Future<void> liveVisitbyId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     print('2');
 
     final String? id = prefs.getString("currentSpecificId");
+    print("id is:$id");
     try {
       Response response = await get(Uri.parse(
           'https://apivaluation.techgigs.in/admin/livevisit/livevisit_byId/$id'));
